@@ -23,54 +23,31 @@
   min-height:80vh;
   display:none;
 }
-#ListOfFilesNFolders .folder {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+#ListOfFilesNFolders {
+  border: 2px solid cornflowerblue;
 }
-
-.folder p {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 8px;
-  background-color: white;
-  border: 6px solid gray;
-  border-radius: 5px;
-}
-
-.folder p:hover {
-  background-color: lightgray;
-}
-
-.folder p span:first-child {
-  margin-right: 10px;
-}
-
 .children {
-  display: none;
-  padding-left: 20px;
-}
-
-.file {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.file p {
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  background-color: white;
-  border: 1px solid gray;
+  display:none;
+  border: 3px solid green;
+  background-color: #fff;
   border-radius: 5px;
+  padding-left:4vw;
 }
-
-.file p:hover {
-  background-color: lightgray;
+.file-area {
+   border: 3px solid green;
+   border-radius: 5px;
+   display:flex;
+   justify-content:space-between;
 }
-
-.file p span:first-child {
-  margin-right: 10px;
+.clickable-area {
+  background-color:red;
+  border: 6px solid #ccc;
+  background-color: #fff;
+  border-radius: 5px;
+  padding:1vw 1vw;
+  display:flex;
+  justify-content:space-between;
+}
+.clickable-area:active {
+  background-color: red;
 }

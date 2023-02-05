@@ -27,24 +27,15 @@ buttons.forEach((btn, index) => {
 fetch("/projectsTree")
   .then(response => response.json())
   .then(items => {
-    const root = document.querySelector("#ListOfFilesNFolders");
+    const root = document.querySelector("#tree");
     generateTree(items, root);
   })
   .catch(error => {
     console.error("Error fetching data:", error);
   });
+// 🦟
 
-// 🗿 Folder click function 
-document.querySelector('#ListOfFilesNFolders').addEventListener('click', function(event) {
-  if (event.target.matches('.folder p')) {
-    event.stopPropagation();
-    const children = event.target.parentElement.querySelector('.children');
-    children.style.display = children.style.display === 'none' ? 'block' : 'none';
-  }
-}); 
-
-
-// ₱ Generate Html
+// 🗿 Generate Html
 function generateTree(node, parentElement) {
   if (node.path === './projects/') {
     node.name = 'Projects root folder';
@@ -52,7 +43,7 @@ function generateTree(node, parentElement) {
   if (node.type === 'folder') {
     const folderElement = document.createElement('ul');
     folderElement.classList.add('folder');
-    folderElement.innerHTML = `<p><div class="clickable-area"><span>${node.name}<span><span>${node.sizeStr}</span></div></p>`;
+    folderElement.innerHTML = `<div class="clickable-area"><span>${node.name}</span><span>${node.sizeStr}</span></div>`;
     parentElement.appendChild(folderElement);
 
     const childrenElement = document.createElement('li');
@@ -65,17 +56,27 @@ function generateTree(node, parentElement) {
   } else if (node.type === 'file') {
     const fileElement = document.createElement('ul');
     fileElement.classList.add('file');
-    fileElement.innerHTML = `<p><div class="clickable-area"><span>${node.name}<span><span>${node.sizeStr}</span></div></p>`;
+    fileElement.innerHTML = `<div class="file-area"><span>${node.name}</span><span>${node.sizeStr}</span></div>`;
     parentElement.appendChild(fileElement);
   }
 }
+// 🦟
 
 // 🗿 Folder click function 
-document.querySelector('#ListOfFilesNFolders').addEventListener('click', function(event) {
+document.querySelector('#tree').addEventListener('click', function(event) {
+  console.log(event.target)
   if (event.target.matches('.clickable-area')) {
-    const children = event.target.parentElement.parentElement.querySelector('.children');
-    children.style.display = children.style.display === 'none' ? 'block' : 'none';
+    event.stopPropagation();
+    const folder = event.target.closest('.folder');
+    const children = folder.querySelector('.children');
+    console.log('Folder: ', folder);
+    console.log('Children: ', children);
+    if (children) {
+      children.style.display = children.style.display === 'none' ? 'block' : 'none';
+    }
+  } else {
+    console.log("Clicked element doesn't match .clickable-area");
   }
-}); 
+});
 
 // 🦟
