@@ -24,17 +24,53 @@
   display:none;
 }
 #ListOfFilesNFolders .folder {
-    cursor: pointer;
-    list-style-type: none;
-    border:2px solid green;
-  }
-  .folder p {
-    font-weight: bold;
-    border:4px solid red;
-    padding: 10px;
-  }
-  .children {
-    display: none;
-    list-style: none;
-    margin-left:4vw;
-  }
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.folder p {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  background-color: white;
+  border: 6px solid gray;
+  border-radius: 5px;
+}
+
+.folder p:hover {
+  background-color: lightgray;
+}
+
+.folder p span:first-child {
+  margin-right: 10px;
+}
+
+.children {
+  display: none;
+  padding-left: 20px;
+}
+
+.file {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.file p {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.file p:hover {
+  background-color: lightgray;
+}
+
+.file p span:first-child {
+  margin-right: 10px;
+}

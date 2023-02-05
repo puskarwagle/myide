@@ -37,10 +37,12 @@ fetch("/projectsTree")
 // 🗿 Folder click function 
 document.querySelector('#ListOfFilesNFolders').addEventListener('click', function(event) {
   if (event.target.matches('.folder p')) {
+    event.stopPropagation();
     const children = event.target.parentElement.querySelector('.children');
     children.style.display = children.style.display === 'none' ? 'block' : 'none';
   }
 }); 
+
 
 // ₱ Generate Html
 function generateTree(node, parentElement) {
@@ -50,7 +52,7 @@ function generateTree(node, parentElement) {
   if (node.type === 'folder') {
     const folderElement = document.createElement('ul');
     folderElement.classList.add('folder');
-    folderElement.innerHTML = `<p>${node.name}</p>`;
+    folderElement.innerHTML = `<p><div class="clickable-area"><span>${node.name}<span><span>${node.sizeStr}</span></div></p>`;
     parentElement.appendChild(folderElement);
 
     const childrenElement = document.createElement('li');
@@ -63,8 +65,17 @@ function generateTree(node, parentElement) {
   } else if (node.type === 'file') {
     const fileElement = document.createElement('ul');
     fileElement.classList.add('file');
-    fileElement.innerHTML = node.name;
+    fileElement.innerHTML = `<p><div class="clickable-area"><span>${node.name}<span><span>${node.sizeStr}</span></div></p>`;
     parentElement.appendChild(fileElement);
   }
 }
+
+// 🗿 Folder click function 
+document.querySelector('#ListOfFilesNFolders').addEventListener('click', function(event) {
+  if (event.target.matches('.clickable-area')) {
+    const children = event.target.parentElement.parentElement.querySelector('.children');
+    children.style.display = children.style.display === 'none' ? 'block' : 'none';
+  }
+}); 
+
 // 🦟
