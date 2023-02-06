@@ -7,7 +7,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const PORT = process.env.PORT || 5000;
 
 // 🗿 Build directory tree
-const directoryPath = './projects/';
+const directoryPath = './projects';
 
 function buildDirectoryTree(path) {
   const stats = fs.lstatSync(path);
@@ -59,7 +59,6 @@ const sizeConversion = size => {
 // 🗿Send tree with size to client
 app.get("/projectsTree", (req, res) => {
   const tree = buildDirectoryTree(directoryPath);
-
   const calculateNodeSize = node => {
     if (node.type === "file") {
       node.size = fs.statSync(node.path).size;
@@ -70,9 +69,20 @@ app.get("/projectsTree", (req, res) => {
     node.sizeStr = sizeConversion(node.size);
   };
   calculateNodeSize(tree);
-
   res.send(tree);
 });
+
+// 🗿ADD FETCH
+
+// 🦟
+
+// 🗿DELETE FETCH
+
+// 🦟
+
+// 🗿RENAME FETCH
+
+// 🦟
 
 // 🔘
 app.listen(PORT, () => {

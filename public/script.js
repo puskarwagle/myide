@@ -146,20 +146,17 @@ function handleEmojiAction(event, type, path) {
   }
 }
   else if (type === 'delete') {
-const confirm = window.confirm(`Are you sure you want to delete ${path} ${type} ?`);
-if (confirm) {
-// send delete request to server
-fetch(`/delete/${path}/${type},` {
-method: 'DELETE'
-})
-.then(res => res.json())
-.then(data => {
-console.log('Delete request sent successfully');
-})
-.catch(error => {
-console.error(error);
-});
-}
+  const confirm = window.confirm(`Are you sure you want to delete ${path} ?`);
+  if (confirm) {
+    // send delete request to server
+    fetch(`/delete/${path}`, {
+      method: 'DELETE'
+    }).then(res => res.json()).then(data => {
+      console.log('Delete request sent successfully');
+    }).catch(error => {
+      console.error(error);
+    });
+  }
 }
   else if (type === 'rename') {
     const nameSpan = daddy.querySelector('.file-span:first-child');
@@ -178,7 +175,6 @@ console.error(error);
 }
 
 // 🦟
-
 
 
 
