@@ -39,15 +39,18 @@
    display:flex;
    justify-content:space-between;
 }
-.clickable-area {
-  background-color:red;
-  border: 6px solid #ccc;
+.folder-area {
+  border: 2px solid #ccc;
   background-color: #fff;
   border-radius: 5px;
-  padding:1vw 1vw;
+  padding:0 0 0 0;
   display:flex;
   justify-content:space-between;
 }
-.clickable-area:active {
-  background-color: red;
+.emoji {
+  border:3px solid gold;
+  padding:2vw 2vw;
+}
+.emoji:active {
+  background-color: blue;
 }
