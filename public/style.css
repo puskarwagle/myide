@@ -33,23 +33,27 @@
   border-radius: 5px;
   padding-left:4vw;
 }
-.file-area {
-   border: 3px solid green;
+ul div {
    border-radius: 5px;
    display:flex;
    justify-content:space-between;
+   align-items:center;
+}
+.file-area {
+   border: 3px solid green;
 }
 .folder-area {
-  border: 2px solid #ccc;
-  background-color: #fff;
-  border-radius: 5px;
-  padding:0 0 0 0;
-  display:flex;
-  justify-content:space-between;
+  border: 2px solid red;
+}
+.addInput {
+  padding:2vw 2vw;
+  display:inline-block;
+  width:70%;
 }
 .emoji {
   border:3px solid gold;
   padding:2vw 2vw;
+  margin-left:auto;
 }
 .emoji:active {
   background-color: blue;

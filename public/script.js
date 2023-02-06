@@ -82,22 +82,31 @@ function generateTree(node, parentElement) {
 
 
 // 🗿 Folder click function
-document.querySelector('#tree').addEventListener('click', function(event) {
+document.getElementById('tree').addEventListener('click', function(event) {
   if (event.target.matches('.folder-span')) {
-    event.stopPropagation();
-    const folder = event.target.closest('.folder');
-    const children = folder.querySelector('.children');
-    children.style.display = children.style.display === 'none' ? 'block' : 'none';
-  }
-    if (event.target.matches('.emoji')) {
-    event.stopPropagation();
-    const id = event.target.id;
-    const type = id.split("-")[0];
-    const path = id.split("-")[1];
-    console.log(`Type: ${type}, Path: ${path}`);
-    handleEmojiAction(event, type, path);
+    toggleFolderDisplay(event);
   }
 });
+document.getElementById('tree').addEventListener('click', function(event) {
+  if (event.target.matches('.emoji')) {
+    handleEmojiClick(event);
+  }
+});
+function toggleFolderDisplay(event) {
+  event.stopPropagation();
+  const folder = event.target.closest('.folder');
+  const children = folder.querySelector('.children');
+  children.style.display = children.style.display === 'none' ? 'block' : 'none';
+}
+function handleEmojiClick(event) {
+  event.stopPropagation();
+  const id = event.target.id;
+  const type = id.split("-")[0];
+  const path = id.split("-")[1];
+  console.log(`Type: ${type}, Path: ${path}`);
+  handleEmojiAction(event, type, path);
+}
+
 // 🦟
 
 
@@ -108,17 +117,50 @@ function handleEmojiAction(event, type, path) {
     console.log(daddy, granDaddy);
 
   if (type === 'add') {
+  //  toggleFolderDisplay(event);
+  const parentContainer = event.target.closest('.children');
+
+  if (!parentContainer.querySelector('.addInput')) {
     const input = document.createElement('input');
     input.setAttribute('type', 'text');
-    input.className = 'hgg';
+    input.className = 'addInput';
+    input.placeholder = "add file or a folder";
+    input.style.display = 'block';
+    input.style.visibility = 'visible';
+    input.focus();
+
+    // Append the input to the DOM
     granDaddy.querySelector('.children').appendChild(input);
-  } 
-  else if (type === 'delete') {
-    const confirm = window.confirm(`Are you sure you want to delete ?`);
-    if (confirm) {
-      // send delete request to server
-    }
+
+    // Handle the blur event for the input
+    input.addEventListener('blur', function () {
+      const inputValue = input.value;
+      if (inputValue) {
+        // Submit the input value to the server
+        // Code to send inputValue to the server
+      }
+
+      // Remove the input element from the DOM
+      input.remove();
+    });
   }
+}
+  else if (type === 'delete') {
+const confirm = window.confirm(`Are you sure you want to delete ${path} ${type} ?`);
+if (confirm) {
+// send delete request to server
+fetch(`/delete/${path}/${type},` {
+method: 'DELETE'
+})
+.then(res => res.json())
+.then(data => {
+console.log('Delete request sent successfully');
+})
+.catch(error => {
+console.error(error);
+});
+}
+}
   else if (type === 'rename') {
     const nameSpan = daddy.querySelector('.file-span:first-child');
     const input = document.createElement('input');
