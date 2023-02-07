@@ -103,10 +103,9 @@ function handleEmojiClick(event) {
   const id = event.target.id;
   const type = id.split("-")[0];
   const path = id.split("-")[1];
-  console.log(`Type: ${type}, Path: ${path}`);
+  // console.log(`Type: ${type}, Path: ${path}`);
   handleEmojiAction(event, type, path);
 }
-
 // 🦟
 
 
@@ -114,7 +113,6 @@ function handleEmojiClick(event) {
 function handleEmojiAction(event, type, path) {
     const daddy = event.target.parentNode;
     const granDaddy = event.target.parentNode.parentNode;
-    console.log(daddy, granDaddy);
 
   if (type === 'add') {
   //  toggleFolderDisplay(event);
@@ -128,33 +126,34 @@ function handleEmojiAction(event, type, path) {
     input.style.display = 'block';
     input.style.visibility = 'visible';
     input.focus();
-
-    // Append the input to the DOM
     granDaddy.querySelector('.children').appendChild(input);
 
-    // Handle the blur event for the input
     input.addEventListener('blur', function () {
       const inputValue = input.value;
       if (inputValue) {
         // Submit the input value to the server
         // Code to send inputValue to the server
       }
-
       // Remove the input element from the DOM
       input.remove();
     });
   }
 }
   else if (type === 'delete') {
+  console.log(path);
   const confirm = window.confirm(`Are you sure you want to delete ${path} ?`);
   if (confirm) {
     // send delete request to server
-    fetch(`/delete/${path}`, {
+    fetch(`/delete/${path.slice(2)}`, {
       method: 'DELETE'
-    }).then(res => res.json()).then(data => {
+    }).then(res => {
+      console.log('Response:', res);
+      return res.json();
+    }).then(data => {
+      console.log('Response data:', data);
       console.log('Delete request sent successfully');
     }).catch(error => {
-      console.error(error);
+      console.error('Error in sending delete request: ', error);
     });
   }
 }

@@ -6,9 +6,27 @@ const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 const PORT = process.env.PORT || 5000;
 
-// 🗿 Build directory tree
+// 🗿 Check if ./projects exists if not create it
 const directoryPath = './projects';
+fs.stat(directoryPath, (err, stats) => {
+  if (err) {
+    if (err.code === 'ENOENT') {
+      fs.mkdir(directoryPath, (mkdirError) => {
+        if (mkdirError) {
+          console.error('Error creating directory: ', mkdirError);
+        } else {
+          console.log(`Directory "${directoryPath}" created successfully`);
+        }
+      });
+    } else {
+      console.error('Error checking directory existence: ', err);
+    }
+  } else {
+    console.log(`Directory "${directoryPath}" already exists`);
+  }
+});
 
+// 🗿 Build directory tree
 function buildDirectoryTree(path) {
   const stats = fs.lstatSync(path);
   const info = {
@@ -76,8 +94,62 @@ app.get("/projectsTree", (req, res) => {
 
 // 🦟
 
-// 🗿DELETE FETCH
-
+// 🗿DELETE FETCH 🗿
+ app.delete('/delete/:path', (req, res) => {
+  console.log("Deleting file or directory at path:", req.params.path);
+  const filePath = req.params.path;
+  const absolutePath = path.resolve(__dirname, filePath);
+  fs.stat(absolutePath, (err, stats) => {
+    console.log("Checking if file exists at path:", absolutePath);
+    if (err) {
+      console.log("Error while checking file existence:", err.message);
+      return res.status(500).json({
+        error: err.message
+      });
+    }
+    if (stats.isFile()) {
+      console.log("Deleting file:", absolutePath);
+      fs.unlink(absolutePath, (err) => {
+        if (err) {
+          console.log("Error while deleting file:", err.message);
+          return res.status(500).json({
+            error: err.message
+          });
+        }
+        console.log("File deleted successfully at path:", absolutePath);
+        return res.json({
+          message: 'File deleted successfully'
+        });
+      });
+    } else if (stats.isDirectory()) {
+      console.log("Deleting directory:", absolutePath);
+      deleteFolderRecursive(absolutePath);
+      console.log("Directory deleted successfully at path:", absolutePath);
+      return res.json({
+        message: 'Directory deleted successfully'
+      });
+    } else {
+      console.log("Path is not a file or directory:", absolutePath);
+      return res.status(400).json({
+        error: 'Path is not a file or directory'
+      });
+    }
+  });
+});
+// 🗿DELETE FOLDER RECURSIVELY FOR FETCH  🗿
+function deleteFolderRecursive(folderPath) {
+  if (fs.existsSync(folderPath)) {
+    fs.readdirSync(folderPath).forEach(file => {
+      const curPath = path.join(folderPath, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+        deleteFolderRecursive(curPath);
+      } else {
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(folderPath);
+  }
+}
 // 🦟
 
 // 🗿RENAME FETCH
