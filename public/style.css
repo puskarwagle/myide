@@ -24,7 +24,8 @@
   display:none;
 }
 #ListOfFilesNFolders {
-  border: 2px solid cornflowerblue;
+  border: 6px dashed cornflowerblue;
+  margin:0 2vw;
 }
 .children {
   display:none;
@@ -36,14 +37,28 @@
 ul div {
    border-radius: 5px;
    display:flex;
-   justify-content:space-between;
    align-items:center;
+   justify-content:flex-end;
 }
 .file-area {
    border: 3px solid green;
+   padding:0 2vw;
+}
+.file-area span:nth-child(1) {
+   margin-right:auto;
+}
+.file-area span:nth-child(2) {
+   padding:0 2vw;
 }
 .folder-area {
   border: 2px solid red;
+  padding:0 2vw;
+}
+.folder-area span:nth-child(1) {
+   margin-right:auto;
+}
+.folder-area span:nth-child(2) {
+   padding:0 2vw;
 }
 .addInput {
   padding:2vw 2vw;
@@ -51,9 +66,8 @@ ul div {
   width:70%;
 }
 .emoji {
-  border:3px solid gold;
+  border:0px solid gold;
   padding:2vw 2vw;
-  margin-left:auto;
 }
 .emoji:active {
   background-color: blue;

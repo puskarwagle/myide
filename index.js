@@ -6,7 +6,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 const PORT = process.env.PORT || 5000;
 
-// 🗿 Check if ./projects exists if not create it
+// 🗿 Check if ./projects exists CREATE PROJECTS 🗂️🗂️🗂️🗂️🗂️🗂️
 const directoryPath = './projects';
 fs.stat(directoryPath, (err, stats) => {
   if (err) {
@@ -22,11 +22,11 @@ fs.stat(directoryPath, (err, stats) => {
       console.error('Error checking directory existence: ', err);
     }
   } else {
-    console.log(`Directory "${directoryPath}" already exists`);
+    // console.log(`Directory "${directoryPath}" already exists`);
   }
 });
 
-// 🗿 Build directory tree
+// 🗿 Build directory tree 🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳
 function buildDirectoryTree(path) {
   const stats = fs.lstatSync(path);
   const info = {
@@ -44,7 +44,7 @@ function buildDirectoryTree(path) {
   return info;
 }
 
-// 🗿Calculate folder size in bytes
+// 🗿Calculate folder size in bytes 🌳🌳🌳🌳
 const calculateFolderSize = folderPath => {
   let size = 0;
   fs.readdirSync(folderPath).forEach(file => {
@@ -59,7 +59,7 @@ const calculateFolderSize = folderPath => {
   return size;
 };
 
-// 🗿Convert sizes
+// 🗿Convert sizes 🌳🌳🌳🌳
 const sizeConversion = size => {
   if (isNaN(size) || size <= 0) {
     return "0 B";
@@ -74,7 +74,7 @@ const sizeConversion = size => {
   }
 };
 
-// 🗿Send tree with size to client
+// 🗿Send tree with size to client 🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳
 app.get("/projectsTree", (req, res) => {
   const tree = buildDirectoryTree(directoryPath);
   const calculateNodeSize = node => {
@@ -90,11 +90,27 @@ app.get("/projectsTree", (req, res) => {
   res.send(tree);
 });
 
+// 🗿Send file content to client 📑📑📑📑📑📑📑📑📑📑📑📑📑📑
+app.get('/file-contents/projects/:path', (req, res) => {
+  console.log('received file content fetch request');
+  const filePath = './projects/' + req.params.path;
+  console.log(filePath)
+  fs.readFile(filePath, 'utf-8', (err, content) => {
+    if (err) {
+      console.error('Error reading file: ', err);
+      res.status(500).send({ error: 'Error reading file' });
+      return;
+    }
+    res.json({ content });
+  });
+});
+// 🦟
+
 // 🗿ADD FETCH
 
 // 🦟
 
-// 🗿DELETE FETCH 🗿
+// 🗿DELETE FETCH  ☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️
  app.delete('/delete/:path', (req, res) => {
   console.log("Deleting file or directory at path:", req.params.path);
   const filePath = req.params.path;
@@ -136,7 +152,7 @@ app.get("/projectsTree", (req, res) => {
     }
   });
 });
-// 🗿DELETE FOLDER RECURSIVELY FOR FETCH  🗿
+// 🗿DELETE FOLDER RECURSIVELY FOR FETCH  ☠️☠️☠️☠️☠️☠️☠️
 function deleteFolderRecursive(folderPath) {
   if (fs.existsSync(folderPath)) {
     fs.readdirSync(folderPath).forEach(file => {
@@ -152,11 +168,37 @@ function deleteFolderRecursive(folderPath) {
 }
 // 🦟
 
-// 🗿RENAME FETCH
-
+// 🗿RENAME FETCH ✏️✏️✏️✏️✏️✏️✏️✏️
+app.post('/rename', (req, res) => {
+  console.log("Received request to rename file/folder:");
+  if (!req.body || !req.body.oldPath || !req.body.newName) {
+    res.status(400).send({
+      error: 'Bad request, missing oldPath or newName property in the request body'
+    });
+    return;
+  }
+  const oldPath = req.body.oldPath;
+  const newName = req.body.newName;
+  const newPath = path.join(path.dirname(oldPath), newName);
+  console.log("New Path: ", newPath);
+  console.log("Old Path: ", oldPath);
+  fs.rename(oldPath, newPath, (err) => {
+    if (err) {
+      console.error("Error renaming file/folder: ", err);
+      res.status(500).send({
+        error: 'Error renaming file or folder'
+      });
+      return;
+    }
+    console.log("File/folder renamed successfully")
+    res.send({
+      success: 'File or folder renamed successfully'
+    });
+  });
+});
 // 🦟
 
-// 🔘
+// 🔘🔘🔘
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

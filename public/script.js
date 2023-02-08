@@ -1,6 +1,7 @@
 
 document.getElementById("ListOfFilesNFolders").style.display ="block";
-// 🗿
+// 🗿TERMINAL+FILE MANAGER+FILES+BROWSER BUTTONS
+// ⏸️⏹️⏺️▶️🔼🔽⏸️⏹️⏺️▶️🔼🔽⏸️⏹️⏺️▶️🔼🔽⏸️⏹️⏺️▶️🔼🔽
 const buttons = [
   document.getElementById("FileManagerBtn"),
   document.getElementById("FilesBtn"),
@@ -21,9 +22,9 @@ buttons.forEach((btn, index) => {
       page.style.display = i === index ? "block" : "none";
     });
   });
-}); // 🦟
+}); // 🦟🦟🦟🦟🦟🦟🦟⏸️⏹️⏺️▶️🔼🔽🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
 
-// 🗿 FETCH TREE TREE
+// 🗿 FETCH TREE TREE 🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳
 fetch("/projectsTree")
   .then(response => response.json())
   .then(items => {
@@ -35,20 +36,26 @@ fetch("/projectsTree")
   });
 // 🦟
 
-// 🗿 Generate Html
+// 🗿 Generate Html 🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️ HTML
 function generateTree(node, parentElement) {
   let html = '';
   if (node.path === './projects/') {
     node.name = 'Projects root folder';
   }
   if (node.type === 'folder') {
+    let deleteAndRename = `
+      <span class="emoji" id="delete-${node.path}">☠️</span>
+      <span class="emoji" id="rename-${node.path}">✏️</span>
+    `;
+    if (node.path === './projects/') {
+      deleteAndRename = 'k';
+    }
     html = `
-      <div class="folder-area">
+      <div id="folder-${node.path}" class="folder-area">
         <span class="folder-span">${node.name}</span>
         <span class="folder-span">${node.sizeStr}</span>
-        <span class="emoji" id="add-${node.path}">➕</span>
-        <span class="emoji" id="delete-${node.path}">☠️</span>
-        <span class="emoji" id="rename-${node.path}">✏️</span>
+        <span class="emoji">➕</span>
+        ${deleteAndRename}
       </div>
     `;
     const folderElement = document.createElement('ul');
@@ -65,11 +72,11 @@ function generateTree(node, parentElement) {
     });
   } else if (node.type === 'file') {
     html = `
-      <div class="file-area">
+      <div id="file-${node.path}" class="file-area">
         <span class="file-span">${node.name}</span>
         <span class="file-span">${node.sizeStr}</span>
-        <span class="emoji" id="delete-${node.path}">☠️</span>
-        <span class="emoji" id="rename-${node.path}">✏️</span>
+        <span class="emoji">☠️</span>
+        <span class="emoji">✏️</span>
       </div>
     `;
     const fileElement = document.createElement('ul');
@@ -78,42 +85,74 @@ function generateTree(node, parentElement) {
     parentElement.appendChild(fileElement);
   }
 }
-// 🦟
+// 🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
 
+// 🗿 File click fetch content 📑📑📑📑📑📑📑📑📑📑📑📑📑
+//const path = event.target.parentNode.id.split('/');
+document.getElementById('tree').addEventListener('click', function(event) {
+  if (event.target.matches('.file-span')) {
+    setupFileSpans(event);
+  }
+});
+function setupFileSpans() {
+  const fileSpans = document.getElementsByClassName("file-span");
+  Array.from(fileSpans).forEach(fileSpan => {
+    fileSpan.addEventListener('click', () => {
+      if (event.target.classList.contains('file-span')) {
+       const path = event.target.parentNode.id.split('-')[1].slice(11);
+       // const path = event.target.parentNode.id.split('-')[1];
+       console.log(path);
+       displayFile(path);
+      }
+    });
+  });
+}
+const displayFile = (path) => {
+  fetch(`/file-contents/projects/${path}`)
+  .then(response => response.json())
+  .then(data => {
+    const fileContent = data.content;
+    document.querySelector('#OpenedFiles').innerHTML = fileContent;
+  }).catch(error => console.error(error));
+};
+// 🦟📑🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
 
-// 🗿 Folder click function
+// 🗿 Folder click function 🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️
 document.getElementById('tree').addEventListener('click', function(event) {
   if (event.target.matches('.folder-span')) {
     toggleFolderDisplay(event);
   }
 });
-document.getElementById('tree').addEventListener('click', function(event) {
-  if (event.target.matches('.emoji')) {
-    handleEmojiClick(event);
-  }
-});
+// 🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️
 function toggleFolderDisplay(event) {
   event.stopPropagation();
   const folder = event.target.closest('.folder');
   const children = folder.querySelector('.children');
   children.style.display = children.style.display === 'none' ? 'block' : 'none';
 }
+
+// 🗿 HANDLE EMOJI CLICK ✏️☠️➕✏️☠️➕✏️☠️➕✏️☠️➕
+document.getElementById('tree').addEventListener('click', function(event) {
+  if (event.target.matches('.emoji')) {
+    handleEmojiClick(event);
+  }
+});
 function handleEmojiClick(event) {
   event.stopPropagation();
-  const id = event.target.id;
+  const id = event.target.parentNode.id;
   const type = id.split("-")[0];
   const path = id.split("-")[1];
-  // console.log(`Type: ${type}, Path: ${path}`);
+  console.log(`Type: ${type}, Path: ${path}`);
   handleEmojiAction(event, type, path);
 }
 // 🦟
 
 
-// 🗿Handle emoji click.
+// 🗿Handle emoji click. ➕✏️☠️➕✏️☠️➕✏️☠️➕✏️☠️➕✏️☠️
 function handleEmojiAction(event, type, path) {
     const daddy = event.target.parentNode;
     const granDaddy = event.target.parentNode.parentNode;
-
+  // ➕➕➕➕➕➕➕➕➕➕➕➕➕➕➕
   if (type === 'add') {
   //  toggleFolderDisplay(event);
   const parentContainer = event.target.closest('.children');
@@ -139,6 +178,7 @@ function handleEmojiAction(event, type, path) {
     });
   }
 }
+  // ☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️
   else if (type === 'delete') {
   console.log(path);
   const confirm = window.confirm(`Are you sure you want to delete ${path} ?`);
@@ -157,22 +197,45 @@ function handleEmojiAction(event, type, path) {
     });
   }
 }
+  // ✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️✏️
   else if (type === 'rename') {
-    const nameSpan = daddy.querySelector('.file-span:first-child');
-    const input = document.createElement('input');
-    input.setAttribute('type', 'text');
-    input.value = nameSpan.textContent;
-    nameSpan.replaceWith(input);
-    input.focus();
-    input.addEventListener('blur', function () {
-      const newName = input.value;
-      nameSpan.textContent = newName;
-      input.replaceWith(nameSpan);
-      // send rename request to server with newName and path
-    });
-  }
+  console.log(daddy);
+  const nameSpan = daddy.querySelector('.file-span:first-child');
+  const input = document.createElement('input');
+  input.setAttribute('type', 'text');
+  input.value = nameSpan.textContent;
+  nameSpan.replaceWith(input);
+  input.focus();
+  input.addEventListener('blur', async function () {
+    const oldPath = event.target.getAttribute('id').replace('rename-', '').substr(2);
+    const folderPath = oldPath.substring(0, oldPath.lastIndexOf('/') + 1);
+    const oldName = oldPath.substring(oldPath.lastIndexOf('/') + 1);
+    const newName = input.value;
+    const newPath = folderPath + newName;
+    console.log(JSON.stringify({ oldPath, newName }));
+    try {
+      const response = await fetch(`/rename`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ oldPath, newName })
+      });
+      const result = await response.json();
+      if (result.success) {
+        // update client-side file tree
+        nameSpan.textContent = newName;
+        input.replaceWith(nameSpan);
+      } else {
+        // show error message
+        alert('old path is null');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
 }
-
+}
 // 🦟
 
 

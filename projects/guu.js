@@ -1,0 +1,1 @@
+const path = event.target.parentNode.id.split('-')[1].slice(2);
