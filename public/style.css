@@ -23,6 +23,7 @@
   min-height:80vh;
   display:none;
 }
+/* FILE EXPLORER 🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️📔🗃️🗃️🗃️🗂️ */
 #ListOfFilesNFolders, #LocalHost, #Terminal {
   border: 6px dashed cornflowerblue;
   margin:0 2vw;
@@ -72,9 +73,15 @@ ul div {
 .emoji:active {
   background-color: blue;
 }
+
+
+
+
+/* 📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📇📇📇🥧🥧🥧 */
 #OpenedFiles {
-  border: 6px dashed cornflowerblue;
+  border: 6px dashed red;
   margin:0 2vw;
+  display:flex;
 }
 #fileNameButtonsDiv {
   background-color:white;
@@ -82,17 +89,25 @@ ul div {
   margin-bottom:2vw;
 }
 .fileNameButton {
-  background-color:white;
-  border:1px solid gray;
-  padding:0.0vw 1vw;
-  font-size:4vw;
-  margin-right:2vw;
+  background-color: lightgray;
+  border:4px groove gray;
+  padding: 2vw 4vw;
+  margin: 1.5vw;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+.fileNameButton i {
+  margin-left: 3vw;
 }
 .fileContentDiv {
   height:100vh;
-  background-color:white;
-  border:1px solid gray;
+  background-color:purple;
+  border:6px groove gray;
   padding:1vw;
   font-size:2vw;
   border-radius:1vw;
+  border-radius: 10px;
+  margin: 10px;
 }

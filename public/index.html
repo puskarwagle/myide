@@ -6,10 +6,14 @@
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <title>myide</title>
       <link rel="stylesheet" href="style.css">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/keymap/sublime.min.js" integrity="sha512-SV3qeFFtzcmGtUQPLM7HLy/7GKJ/x3c2PdiF5GZQnbHzIlI2q7r77y0IgLLbBDeHiNfCSBYDQt898Xp0tcZOeA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@6.65.7/lib/codemirror.min.css" integrity="sha384-OI7EbxdCiL3OzKjCAlvA7VBG4Osxu2RV9Xz/vfgeI/Wzw1LkGju/f0EcrpNg1eB" crossorigin="anonymous">
+      <script src="https://cdn.jsdelivr.net/npm/codemirror@6.65.7/lib/codemirror.min.js" integrity="sha384-eKMvnw8OnFJcDXq3VRInZMvj0XLkW8pN/cw0F/23vQjK6W858mpB5U6N0UvAOhO" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/codemirror@5.54.0/lib/codemirror.js"></script>
+
+<link rel="stylesheet" href="node_modules/xterm/css/xterm.css" />
+      <script src="node_modules/xterm/lib/xterm.js"></script>
+   
    </head>
    <body>
       <div id="MainButtons">
@@ -39,6 +43,12 @@
          <div class="pages" id="Terminal">
             <!-- this is the div where the list of files and folders are -->
             <h1>Terminal</h1>
+      <div id="terminal"></div>
+      <script>
+        var term = new Terminal();
+        term.open(document.getElementById('terminal'));
+        term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
+      </script>
          </div>
       </main>
       <script src="script.js"></script>
