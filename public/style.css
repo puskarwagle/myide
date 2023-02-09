@@ -23,7 +23,7 @@
   min-height:80vh;
   display:none;
 }
-#ListOfFilesNFolders {
+#ListOfFilesNFolders, #LocalHost, #Terminal {
   border: 6px dashed cornflowerblue;
   margin:0 2vw;
 }
@@ -71,4 +71,28 @@ ul div {
 }
 .emoji:active {
   background-color: blue;
+}
+#OpenedFiles {
+  border: 6px dashed cornflowerblue;
+  margin:0 2vw;
+}
+#fileNameButtonsDiv {
+  background-color:white;
+  border:2px solid #ff809f;
+  margin-bottom:2vw;
+}
+.fileNameButton {
+  background-color:white;
+  border:1px solid gray;
+  padding:0.0vw 1vw;
+  font-size:4vw;
+  margin-right:2vw;
+}
+.fileContentDiv {
+  height:100vh;
+  background-color:white;
+  border:1px solid gray;
+  padding:1vw;
+  font-size:2vw;
+  border-radius:1vw;
 }

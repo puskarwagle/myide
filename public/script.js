@@ -36,7 +36,7 @@ fetch("/projectsTree")
   });
 // 🦟
 
-// 🗿 Generate Html 🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️ HTML
+// 🗿 Generate Html 🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️🖥️ HTML
 function generateTree(node, parentElement) {
   let html = '';
   if (node.path === './projects/') {
@@ -48,7 +48,7 @@ function generateTree(node, parentElement) {
       <span class="emoji" id="rename-${node.path}">✏️</span>
     `;
     if (node.path === './projects/') {
-      deleteAndRename = 'k';
+      deleteAndRename = '';
     }
     html = `
       <div id="folder-${node.path}" class="folder-area">
@@ -88,7 +88,6 @@ function generateTree(node, parentElement) {
 // 🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
 
 // 🗿 File click fetch content 📑📑📑📑📑📑📑📑📑📑📑📑📑
-//const path = event.target.parentNode.id.split('/');
 document.getElementById('tree').addEventListener('click', function(event) {
   if (event.target.matches('.file-span')) {
     setupFileSpans(event);
@@ -100,8 +99,6 @@ function setupFileSpans() {
     fileSpan.addEventListener('click', () => {
       if (event.target.classList.contains('file-span')) {
        const path = event.target.parentNode.id.split('-')[1].slice(11);
-       // const path = event.target.parentNode.id.split('-')[1];
-       console.log(path);
        displayFile(path);
       }
     });
@@ -109,12 +106,36 @@ function setupFileSpans() {
 }
 const displayFile = (path) => {
   fetch(`/file-contents/projects/${path}`)
-  .then(response => response.json())
-  .then(data => {
-    const fileContent = data.content;
-    document.querySelector('#OpenedFiles').innerHTML = fileContent;
-  }).catch(error => console.error(error));
+    .then(response => response.json())
+    .then(data => {
+      const fileContent = data.content;
+      const [fileName, fileExtension] = path.split(".");
+
+      const fileNameButton = document.createElement("button");
+      fileNameButton.className = 'fileNameButton';
+      fileNameButton.innerHTML = `${fileName} X`;
+
+      const fileContentDiv = document.createElement("div");
+      fileContentDiv.className = 'fileContentDiv';
+      fileContentDiv.id = fileName + fileExtension.charAt(0).toUpperCase() + fileExtension.slice(1);
+      
+      const OpenedFiles = document.querySelector("#OpenedFiles");
+      OpenedFiles.appendChild(fileContentDiv);
+
+      const codeMirror = CodeMirror(fileContentDiv, {
+        value: fileContent,
+        mode: fileExtension,
+        theme: "default",
+        lineNumbers: true,
+        readOnly: true
+      });
+
+      const fileNameButtonsDiv = document.querySelector("#fileNameButtonsDiv");
+      fileNameButtonsDiv.appendChild(fileNameButton);
+    })
+    .catch(error => console.error(error));
 };
+
 // 🦟📑🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
 
 // 🗿 Folder click function 🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️🗂️
@@ -131,7 +152,7 @@ function toggleFolderDisplay(event) {
   children.style.display = children.style.display === 'none' ? 'block' : 'none';
 }
 
-// 🗿 HANDLE EMOJI CLICK ✏️☠️➕✏️☠️➕✏️☠️➕✏️☠️➕
+// 🗿 HANDLE EMOJI CLICK ✏️✏️✏️✏️➕➕➕➕☠️☠️☠️☠️
 document.getElementById('tree').addEventListener('click', function(event) {
   if (event.target.matches('.emoji')) {
     handleEmojiClick(event);
@@ -146,7 +167,6 @@ function handleEmojiClick(event) {
   handleEmojiAction(event, type, path);
 }
 // 🦟
-
 
 // 🗿Handle emoji click. ➕✏️☠️➕✏️☠️➕✏️☠️➕✏️☠️➕✏️☠️
 function handleEmojiAction(event, type, path) {
