@@ -1,3 +1,4 @@
+//import CodeMirror from 'codemirror';
 
 document.getElementById("ListOfFilesNFolders").style.display ="block";
 // 🗿TERMINAL+FILE MANAGER+FILES+BROWSER BUTTONS
@@ -93,47 +94,67 @@ document.getElementById('tree').addEventListener('click', function(event) {
     setupFileSpans(event);
   }
 });
-function setupFileSpans() {
-  const fileSpans = document.getElementsByClassName("file-span");
-  Array.from(fileSpans).forEach(fileSpan => {
-    fileSpan.addEventListener('click', () => {
-      if (event.target.classList.contains('file-span')) {
-       const path = event.target.parentNode.id.split('-')[1].slice(11);
-       displayFile(path);
-      }
+
+// window.addEventListener('load', function () {
+  function setupFileSpans(event) {
+    const fileSpans = document.getElementsByClassName("file-span");
+    Array.from(fileSpans).forEach(fileSpan => {
+      fileSpan.addEventListener('click', () => {
+        if (event.target.classList.contains('file-span')) {
+         const path = event.target.parentNode.id.split('-')[1].slice(11);
+         displayFile(path);
+         document.getElementById("FilesBtn").click();
+        }
+      });
     });
-  });
-}
+  }
+// });
+
 const displayFile = (path) => {
+  // Check if the file content div has already been created
+  const fileName = path.split(".")[0];
+  const fileExtension = path.split(".")[1];
+  const fileContentDivId = `${fileName}${fileExtension}`;
+  const fileContentDiv = document.getElementById(fileContentDivId);
+  if (fileContentDiv) {
+    // If the file content div already exists, do nothing
+    return;
+  } else if (!fileContentDiv) {
+
+  // If the file content div does not exist, send the fetch request
   fetch(`/file-contents/projects/${path}`)
     .then(response => response.json())
     .then(data => {
       const fileContent = data.content;
-      const [fileName, fileExtension] = path.split(".");
 
       const fileNameButton = document.createElement("button");
       fileNameButton.className = 'fileNameButton';
-      fileNameButton.innerHTML = `${fileName} X`;
+      fileNameButton.innerHTML = `${fileName} <i class="fas fa-times"></i>`;
 
-      const fileContentDiv = document.createElement("div");
-      fileContentDiv.className = 'fileContentDiv';
-      fileContentDiv.id = fileName + fileExtension.charAt(0).toUpperCase() + fileExtension.slice(1);
+      let newFileContentDiv = document.createElement("div");
+      newFileContentDiv.className = 'fileContentDiv';
+      newFileContentDiv.id = fileContentDivId;
       
       const OpenedFiles = document.querySelector("#OpenedFiles");
-      OpenedFiles.appendChild(fileContentDiv);
-
-      const codeMirror = CodeMirror(fileContentDiv, {
-        value: fileContent,
-        mode: fileExtension,
-        theme: "default",
-        lineNumbers: true,
-        readOnly: true
-      });
+      OpenedFiles.appendChild(newFileContentDiv);
 
       const fileNameButtonsDiv = document.querySelector("#fileNameButtonsDiv");
       fileNameButtonsDiv.appendChild(fileNameButton);
+
+      const editor = CodeMirror(newFileContentDiv, {
+        value: fileContent,
+        mode: `text/${fileExtension}`,
+        lineNumbers: true,
+        indentUnit: 2,
+        theme: "dracula",
+        autofocus: true,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        keyMap: "sublime"
+      });
     })
     .catch(error => console.error(error));
+    }
 };
 
 // 🦟📑🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
