@@ -1,6 +1,9 @@
 //import CodeMirror from 'codemirror';
 
 document.getElementById("ListOfFilesNFolders").style.display ="block";
+document.getElementById("OpenedFiles").style.display ="none";
+document.getElementById("LocalHost").style.display ="none";
+document.getElementById("Terminal").style.display ="none";
 // 🗿TERMINAL+FILE MANAGER+FILES+BROWSER BUTTONS
 // ⏸️⏹️⏺️▶️🔼🔽⏸️⏹️⏺️▶️🔼🔽⏸️⏹️⏺️▶️🔼🔽⏸️⏹️⏺️▶️🔼🔽
 const buttons = [
@@ -113,18 +116,24 @@ document.getElementById('tree').addEventListener('click', function(event) {
 // 📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑
 const displayFile = (path) => {
   // Check if the file content div has already been created
+  let recentlyOpenedFiles = [];
   const fileName = path.split(".")[0];
   const fileExtension = path.split(".")[1];
   const fileContentDivId = `${fileName}${fileExtension}`;
   const fileContentDiv = document.getElementById(fileContentDivId);
   if (fileContentDiv) {
-    // If the file content div already exists, do nothing
+    // If the file content div already exists, make it visible
+    const allFileContentDivs = document.querySelectorAll(".fileContentDiv");
+    allFileContentDivs.forEach(div => {
+      div.style.display = "none";
+    });
+    fileContentDiv.style.display = "block";
     return;
   } else if (!fileContentDiv) {
     // If the file content div does not exist, send the fetch request
     fetch(`/file-contents/projects/${path}`).then(response => response.json()).then(data => {
       const fileContent = data.content;
-      
+
       const fileNameButton = document.createElement("button");
       fileNameButton.className = 'fileNameButton';
       fileNameButton.innerHTML = `${fileName} <i class="fas fa-times"></i>`;
@@ -138,19 +147,20 @@ const displayFile = (path) => {
           recentlyOpenedFiles.splice(fileNameIndex, 1);
         }
       });
-      
-      localStorage.removeItem("recentlyOpenedFiles");
-      
-      let newFileContentDiv = document.createElement("pre");
+      fileNameButton.addEventListener("click", () => {
+        displayFile(path);
+      });
+
+      let newFileContentDiv = document.createElement("div");
       newFileContentDiv.className = 'fileContentDiv';
       newFileContentDiv.id = fileContentDivId;
-      
+
       const fileNameButtonsDiv = document.querySelector("#fileNameButtonsDiv");
       fileNameButtonsDiv.appendChild(fileNameButton);
-      
+
       const OpenedFiles = document.querySelector("#OpenedFiles");
       OpenedFiles.appendChild(newFileContentDiv);
-      
+
       switch (fileExtension) {
         case "html":
           mode = "htmlmixed";
@@ -178,6 +188,7 @@ const displayFile = (path) => {
         autoCloseBrackets: true,
         keyMap: "default"
       });
+
       // Store the file name in the recently opened array
       let recentlyOpened = JSON.parse(localStorage.getItem("recentlyOpened")) || [];
       if (!recentlyOpened.includes(fileName)) {
@@ -192,7 +203,7 @@ const displayFile = (path) => {
 };
 // On page load, display the recently opened files
 window.addEventListener("load", () => {
-  const recentlyOpenedFiles = JSON.parse(localStorage.getItem("recentlyOpenedFiles")) || [];
+  const recentlyOpenedFiles = JSON.parse(localStorage.getItem("recentlyOpened")) || [];
   recentlyOpenedFiles.forEach(file => displayFile(file));
 });
 // END OF FILES 📑📑📑📑📑📑📑📑📑🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
