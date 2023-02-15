@@ -90,122 +90,107 @@ function generateTree(node, parentElement) {
   }
 }
 // 🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
-
+// 📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑
 // 🗿 File click fetch content 📑📑📑📑📑📑📑📑📑📑📑📑📑
 document.getElementById('tree').addEventListener('click', function(event) {
   if (event.target.matches('.file-span')) {
     setupFileSpans(event);
   }
 });
-
-// window.addEventListener('load', function () {
-  function setupFileSpans(event) {
-    const fileSpans = document.getElementsByClassName("file-span");
-    Array.from(fileSpans).forEach(fileSpan => {
-      fileSpan.addEventListener('click', () => {
-        if (event.target.classList.contains('file-span')) {
-         const path = event.target.parentNode.id.split('-')[1].slice(11);
-         displayFile(path);
-         document.getElementById("FilesBtn").click();
-        }
-      });
-    });
-  }
-// });
-
-// 📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑
-const displayFile = (path) => {
-  // Check if the file content div has already been created
-  let recentlyOpenedFiles = [];
-  const fileName = path.split(".")[0];
-  const fileExtension = path.split(".")[1];
-  const fileContentDivId = `${fileName}${fileExtension}`;
-  const fileContentDiv = document.getElementById(fileContentDivId);
-  if (fileContentDiv) {
-    // If the file content div already exists, make it visible
-    const allFileContentDivs = document.querySelectorAll(".fileContentDiv");
-    allFileContentDivs.forEach(div => {
-      div.style.display = "none";
-    });
-    fileContentDiv.style.display = "block";
-    return;
-  } else if (!fileContentDiv) {
-    // If the file content div does not exist, send the fetch request
-    fetch(`/file-contents/projects/${path}`).then(response => response.json()).then(data => {
-      const fileContent = data.content;
-
-      const fileNameButton = document.createElement("button");
-      fileNameButton.className = 'fileNameButton';
-      fileNameButton.innerHTML = `${fileName} <i class="fas fa-times"></i>`;
-      fileNameButton.addEventListener("click", () => {
-        const fileContentDiv = document.getElementById(fileContentDivId);
-        fileContentDiv.remove();
-        fileNameButton.remove();
-        // Remove the file name from the recently opened files array
-        const fileNameIndex = recentlyOpenedFiles.indexOf(`${fileName}.${fileExtension}`);
-        if (fileNameIndex !== -1) {
-          recentlyOpenedFiles.splice(fileNameIndex, 1);
-        }
-      });
-      fileNameButton.addEventListener("click", () => {
+function setupFileSpans(event) {
+  const fileSpans = document.getElementsByClassName("file-span");
+  Array.from(fileSpans).forEach(fileSpan => {
+    fileSpan.addEventListener('click', () => {
+      if (fileSpan.classList.contains('file-span')) {
+        const path = fileSpan.parentNode.id.split('-')[1].slice(11);
         displayFile(path);
-      });
-
-      let newFileContentDiv = document.createElement("div");
-      newFileContentDiv.className = 'fileContentDiv';
-      newFileContentDiv.id = fileContentDivId;
-
-      const fileNameButtonsDiv = document.querySelector("#fileNameButtonsDiv");
-      fileNameButtonsDiv.appendChild(fileNameButton);
-
-      const OpenedFiles = document.querySelector("#OpenedFiles");
-      OpenedFiles.appendChild(newFileContentDiv);
-
-      switch (fileExtension) {
-        case "html":
-          mode = "htmlmixed";
-          break;
-        case "css":
-          mode = "css";
-          break;
-        case "js":
-          mode = "javascript";
-          break;
-        case "py":
-          mode = "python";
-          break;
-        default:
-          mode = "text/plain";
+        document.getElementById("FilesBtn").click();
       }
-      const editor = CodeMirror(newFileContentDiv, {
-        value: fileContent,
-        mode: mode,
-        lineNumbers: true,
-        indentUnit: 2,
-        theme: "dracula",
-        autofocus: true,
-        matchBrackets: true,
-        autoCloseBrackets: true,
-        keyMap: "default"
-      });
-
-      // Store the file name in the recently opened array
-      let recentlyOpened = JSON.parse(localStorage.getItem("recentlyOpened")) || [];
-      if (!recentlyOpened.includes(fileName)) {
-        recentlyOpened.push(fileName);
-      }
-      if (recentlyOpened.length > 5) {
-        recentlyOpened.shift();
-      }
-      localStorage.setItem("recentlyOpened", JSON.stringify(recentlyOpened));
-    }).catch(error => console.error(error));
+    });
+  });
+}
+// DISPLAY FILE 📑
+const recentlyOpened = [];
+const maxFiles = 5;
+// Function to fetch file content
+const displayFile = (path) => {
+  console.log(path);
+  return fetch(`/file-contents/projects/${path}`).then(response => response.json()).then(data => {
+    const fileContent = data.content;
+    console.log('data.content');
+    createAndFillElements(path, fileContent);
+  });
+};
+// Function to create and fill HTML elements dynamically
+const createAndFillElements = (path, fileContent) => {
+  console.log('create and fill elements func called')
+  // Get the filename from the path
+  const fileName = path.substring(path.lastIndexOf("/") + 1);
+  // Check if the file path exists in the recently opened array
+  let index = recentlyOpened.indexOf(path);
+  if (index === -1) {
+    // If it doesn't, add it to the recently opened array
+    recentlyOpened.unshift(path);
+    index = 0;
+    // Remove the oldest file from the array if there are more than maxFiles in the recently opened array
+    if (recentlyOpened.length > maxFiles) {
+      recentlyOpened.pop();
+    }
+  } else {
+    // If it does, move it to the front of the recently opened array
+    recentlyOpened.splice(index, 1);
+    recentlyOpened.unshift(path);
+  }
+  // Check if the FileButtons div exists
+  let fileButtons = document.getElementById("FileButtons");
+  if (!fileButtons) {
+    // If it doesn't, create it
+    fileButtons = document.createElement("div");
+    fileButtons.id = 'FileButtons';
+  }
+  // Create the "fileBtn-${fileName}" div
+  const fileBtn = document.createElement("div");
+  fileBtn.id = `fileBtn-${fileName}`;
+  fileButtons.appendChild(fileBtn);
+  const openBtn = document.createElement("button");
+  openBtn.innerHTML = "Open";
+  openBtn.id = `openBtn-${fileName}`;
+  fileBtn.appendChild(openBtn);
+  // Add a click event listener to the openBtn
+  openBtn.addEventListener("click", () => {
+    displayFile(path);
+  });
+  // Check if the FileContents div exists
+  let fileContents = document.getElementById("FileContents");
+  if (!fileContents) {
+    // If it doesn't, create it
+    fileContents = document.createElement("div");
+    fileContents.id = 'FileContents';
+  }
+  // Create the "fileContent-${fileName}" div
+  const fileContentDiv = document.createElement("div");
+  fileContentDiv.id = `fileContent-${fileName}`;
+  fileContents.appendChild(fileContentDiv);
+  // Create the file title
+  const fileTitle = document.createElement("h2");
+  fileTitle.innerHTML = fileName;
+  fileContentDiv.appendChild(fileTitle);
+  // Create the file content
+  const content = document.createElement("p");
+  content.innerHTML = fileContent;
+  fileContentDiv.appendChild(content);
+  // Append the FileButtons and FileContents divs to the body
+  document.body.appendChild(fileButtons);
+  document.body.appendChild(fileContents);
+  // Show the file content for the currently selected file
+  document.getElementById(`fileContent-${fileName}`).style.display = "block";
+  // Hide the contents of all other files
+  for (let i = 0; i < recentlyOpened.length; i++) {
+    if (recentlyOpened[i] !== path) {
+      document.getElementById(`fileContent-${recentlyOpened[i].substring(recentlyOpened[i].lastIndexOf("/") + 1)}`).style.display = "none";
+    }
   }
 };
-// On page load, display the recently opened files
-window.addEventListener("load", () => {
-  const recentlyOpenedFiles = JSON.parse(localStorage.getItem("recentlyOpened")) || [];
-  recentlyOpenedFiles.forEach(file => displayFile(file));
-});
 // END OF FILES 📑📑📑📑📑📑📑📑📑🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
 // 🦟📑🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟🦟
 
@@ -328,6 +313,3 @@ function handleEmojiAction(event, type, path) {
 }
 }
 // 🦟
-
-
-

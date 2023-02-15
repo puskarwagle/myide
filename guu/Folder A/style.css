@@ -9,10 +9,9 @@
 }
 #MainButtons button {
   flex-basis: 25%;
-  padding: 2vw;
+  padding: 10px;
   border:1px solid grey;
   text-align: center;
-  font-size: 5vw;
 }
 .pages {
   border: 2px solid cornflowerblue;

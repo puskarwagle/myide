@@ -4,11 +4,10 @@ const path = require("path");
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
-// 1.🗿 Check if ./guu exists ! CREATE PROJECTS 🗂️🗂️🗂️🗂️🗂️🗂️
-const directoryPath = './guu';
+// 🗿 Check if ./projects exists CREATE PROJECTS 🗂️🗂️🗂️🗂️🗂️🗂️
+const directoryPath = './projects';
 fs.stat(directoryPath, (err, stats) => {
   if (err) {
     if (err.code === 'ENOENT') {
@@ -27,7 +26,7 @@ fs.stat(directoryPath, (err, stats) => {
   }
 });
 
-// 2.🗿 Build directory tree 🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳
+// 🗿 Build directory tree 🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳
 function buildDirectoryTree(path) {
   const stats = fs.lstatSync(path);
   const info = {
@@ -45,7 +44,7 @@ function buildDirectoryTree(path) {
   return info;
 }
 
-// 3🗿Calculate folder size in bytes 🌳🌳🌳🌳
+// 🗿Calculate folder size in bytes 🌳🌳🌳🌳
 const calculateFolderSize = folderPath => {
   let size = 0;
   fs.readdirSync(folderPath).forEach(file => {
@@ -60,7 +59,7 @@ const calculateFolderSize = folderPath => {
   return size;
 };
 
-// 4.🗿Convert sizes 🌳🌳🌳🌳
+// 🗿Convert sizes 🌳🌳🌳🌳
 const sizeConversion = size => {
   if (isNaN(size) || size <= 0) {
     return "0 B";
@@ -75,8 +74,8 @@ const sizeConversion = size => {
   }
 };
 
-// 5.🗿Send tree with size to client 🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳
-app.get("/guuTree", (req, res) => {
+// 🗿Send tree with size to client 🌳🌳🌳🌳🌳🌳🌳🌳🌳🌳
+app.get("/projectsTree", (req, res) => {
   const tree = buildDirectoryTree(directoryPath);
   const calculateNodeSize = node => {
     if (node.type === "file") {
@@ -91,10 +90,10 @@ app.get("/guuTree", (req, res) => {
   res.send(tree);
 });
 
-// 6.🗿Send file content to client 📑📑📑📑📑📑📑📑📑📑📑📑📑📑
-app.get('/fileContent-:path', (req, res) => {
+// 🗿Send file content to client 📑📑📑📑📑📑📑📑📑📑📑📑📑📑
+app.get('/file-contents/projects/:path', (req, res) => {
   console.log('received file content fetch request');
-  const filePath = req.params.path;
+  const filePath = './projects/' + req.params.path;
   console.log(filePath)
   fs.readFile(filePath, 'utf-8', (err, content) => {
     if (err) {
@@ -107,33 +106,69 @@ app.get('/fileContent-:path', (req, res) => {
 });
 // 🦟
 
+// 🗿ADD FETCH
 
-app.delete('/server/folder/delete', async (req, res) => {
-  try {
-    const { folderPath } = req.body;
-    await fs.promises.rmdir(folderPath, { recursive: true });
-    res.json({ message: 'Folder deleted successfully.' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occurred while deleting the folder.' });
-  }
-});
-
-
-// 🗿 DELETE A FILE ☠️ 🗿 DELETE A FILE ☠️
-app.delete('/server/file/delete', async (req, res) => {
-  try {
-    const { filePath } = req.body;
-    await fs.promises.unlink(filePath);
-    res.json({ message: 'File deleted successfully.' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occurred while deleting the file.' });
-  }
-});
 // 🦟
 
-// 9.🗿RENAME FETCH ✏️✏️✏️✏️✏️✏️✏️✏️
+// 🗿DELETE FETCH  ☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️☠️
+ app.delete('/delete/:path', (req, res) => {
+  console.log("Deleting file or directory at path:", req.params.path);
+  const filePath = req.params.path;
+  const absolutePath = path.resolve(__dirname, filePath);
+  fs.stat(absolutePath, (err, stats) => {
+    console.log("Checking if file exists at path:", absolutePath);
+    if (err) {
+      console.log("Error while checking file existence:", err.message);
+      return res.status(500).json({
+        error: err.message
+      });
+    }
+    if (stats.isFile()) {
+      console.log("Deleting file:", absolutePath);
+      fs.unlink(absolutePath, (err) => {
+        if (err) {
+          console.log("Error while deleting file:", err.message);
+          return res.status(500).json({
+            error: err.message
+          });
+        }
+        console.log("File deleted successfully at path:", absolutePath);
+        return res.json({
+          message: 'File deleted successfully'
+        });
+      });
+    } else if (stats.isDirectory()) {
+      console.log("Deleting directory:", absolutePath);
+      deleteFolderRecursive(absolutePath);
+      console.log("Directory deleted successfully at path:", absolutePath);
+      return res.json({
+        message: 'Directory deleted successfully'
+      });
+    } else {
+      console.log("Path is not a file or directory:", absolutePath);
+      return res.status(400).json({
+        error: 'Path is not a file or directory'
+      });
+    }
+  });
+});
+// 🗿DELETE FOLDER RECURSIVELY FOR FETCH  ☠️☠️☠️☠️☠️☠️☠️
+function deleteFolderRecursive(folderPath) {
+  if (fs.existsSync(folderPath)) {
+    fs.readdirSync(folderPath).forEach(file => {
+      const curPath = path.join(folderPath, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+        deleteFolderRecursive(curPath);
+      } else {
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(folderPath);
+  }
+}
+// 🦟
+
+// 🗿RENAME FETCH ✏️✏️✏️✏️✏️✏️✏️✏️
 app.post('/rename', (req, res) => {
   console.log("Received request to rename file/folder:");
   if (!req.body || !req.body.oldPath || !req.body.newName) {
@@ -163,7 +198,7 @@ app.post('/rename', (req, res) => {
 });
 // 🦟
 
-// 10. 🔘🔘🔘
+// 🔘🔘🔘
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
