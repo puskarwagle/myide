@@ -31,7 +31,7 @@ function generateTree(node, parentElement) {
     }
     html = `
       <div id="folder-${node.path}" class="folder-area">
-        <span class="folder-span">${node.name}</span>
+        <span class="folder-span foname">${node.name}</span>
         <span class="folder-span">${node.sizeStr}</span>
         <span class="emoji foadd" id="add-${node.path}">➕</span>
         ${deleteAndRename}
@@ -52,8 +52,8 @@ function generateTree(node, parentElement) {
   } else if (node.type === 'file') {
     html = `
       <div id="file-${node.path}" class="file-area">
-        <span class="file-span">${node.name}</span>
-        <span class="file-span">${node.sizeStr}</span>
+        <span class="file-span finame" tabindex="0">${node.name}</span>
+        <span class="file-span" tabindex="0">${node.sizeStr}</span>
         <span class="emoji fidel" id="delete-${node.path}">☠️</span>
         <span class="emoji firen" id="rename-${node.path}">✏️</span>
       </div>

@@ -2,10 +2,14 @@
    margin: 0 0 0 0;
    padding:0 0 0 0;
 }
+body {
+  background-color: rgba(128, 128, 128, 0.5);
+}
 #MainButtons {
   display:flex;
   margin-bottom:1vw;
-  border:2px solid red;
+  border:0px solid red;
+  background-color: rgba(128, 128, 128, 0.7);
 }
 #MainButtons button {
   flex-basis: 25%;
@@ -25,14 +29,13 @@
   display:none;
 }
 /* FILE EXPLORER 🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️📔🗃️🗃️🗃️🗂️ */
-#ListOfFilesNFolders, #LocalHost, #Terminal {
+#ListOfFilesNFolders, #LocalHost, #Terminal, #OpenedFiles {
   border: 6px dashed cornflowerblue;
   margin:0 2vw;
 }
 .children {
   display:none;
-  border: 3px solid green;
-  background-color: #fff;
+  border-left: 0px solid green;
   border-radius: 5px;
   padding-left:4vw;
 }
@@ -41,19 +44,22 @@ ul div {
    display:flex;
    align-items:center;
    justify-content:flex-end;
+   border-bottom:1px dashed cornflowerblue;
 }
 .file-area {
-   border: 3px solid green;
+   border-left: 3px solid #aafff4;
    padding:0 2vw;
 }
 .file-area span:nth-child(1) {
    margin-right:auto;
+   font-size:3.4vw;
 }
 .file-area span:nth-child(2) {
-   padding:0 2vw;
+   padding:0 10vw;
+   font-size:3.4vw;
 }
 .folder-area {
-  border: 2px solid red;
+  border-left: 2px solid #f50fce;
   padding:0 2vw;
 }
 .folder-area span:nth-child(1) {
@@ -61,15 +67,12 @@ ul div {
 }
 .folder-area span:nth-child(2) {
    padding:0 2vw;
-}
-.addInput {
-  padding:2vw 2vw;
-  display:inline-block;
-  width:70%;
+   font-size:3.5vw;
 }
 .emoji {
   border:0px solid gold;
   padding:2vw 2vw;
+  font-size:3.5vw;
 }
 .emoji:active {
   background-color: blue;
@@ -79,36 +82,47 @@ ul div {
 
 
 /* 📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📇📇📇🥧🥧🥧 */
+/* CSS for the Opened Files container */
 #OpenedFiles {
-  border: 6px dashed red;
-  margin:0 2vw;
-  display:flex;
+  display: flex;
+  flex-direction: column;
+  padding:2vw;
 }
-#fileNameButtonsDiv {
-  background-color:white;
-  border:2px solid #ff809f;
-  margin-bottom:2vw;
+#OpenedFiles #FileButtonsAll {
+  border: 3px solid #f50fce;
+  margin-bottom: 2vw;
+  display: flex;
 }
-.fileNameButton {
-  background-color: lightgray;
-  border:4px groove gray;
-  padding: 2vw 4vw;
-  margin: 1.5vw;
-  border-radius: 5px;
+#OpenedFiles #FileButtonsAll .fileNameBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content:space-between;
+  border:1px solid #aafff4;
+  border-radius:5px;
+  height:100%;
+  margin-right:2vw;
+}
+#OpenedFiles .fileNameBtn .fileName {
+  font-weight: bold;
+  font-size: 6vw;
+}
+#OpenedFiles .fileNameBtn .close {
+  background-color: #dc3545;
+  font-size:6vw;
+  padding:0 1vw;
   border: none;
   cursor: pointer;
-  display: inline-block;
 }
-.fileNameButton i {
-  margin-left: 3vw;
+#OpenedFiles #fileContentsAll {
+  border:3px solid #f50fce;
 }
-.fileContentDiv {
-  height:100vh;
-  background-color:purple;
-  border:6px groove gray;
+#OpenedFiles #fileContentsAll > div:not(.open) {
+  display: none;
+}
+#OpenedFiles .fileContent {
   padding:1vw;
-  font-size:2vw;
-  border-radius:1vw;
-  border-radius: 10px;
-  margin: 10px;
+  background-color: rgba(128, 128, 128, 0.0);
+  font-size:4vw;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }

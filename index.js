@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const fsPromises = require('fs').promises; 
 const path = require("path");
 const app = express();
 
@@ -92,26 +93,25 @@ app.get("/guuTree", (req, res) => {
 });
 
 // 6.🗿Send file content to client 📑📑📑📑📑📑📑📑📑📑📑📑📑📑
-app.get('/fileContent-:path', (req, res) => {
-  console.log('received file content fetch request');
-  const filePath = req.params.path;
-  console.log(filePath)
-  fs.readFile(filePath, 'utf-8', (err, content) => {
-    if (err) {
-      console.error('Error reading file: ', err);
-      res.status(500).send({ error: 'Error reading file' });
-      return;
-    }
+app.get('/fileContent-:path', async (req, res) => {
+  try {
+    console.log('received file content fetch request');
+    const filePath = req.params.path;
+    console.log(filePath);
+    const content = await fsPromises.readFile(filePath, 'utf-8');
     res.json({ content });
-  });
+  } catch (error) {
+    console.error('Error reading file: ', error);
+    res.status(500).send({ error: 'Error reading file' });
+  }
 });
 // 🦟
 
-
+// 🗿 DELETE A FOLDER ☠️ 🗿 DELETE A FOLDER ☠️
 app.delete('/server/folder/delete', async (req, res) => {
   try {
     const { folderPath } = req.body;
-    await fs.promises.rmdir(folderPath, { recursive: true });
+    await fsPromises.rmdir(folderPath, { recursive: true });
     res.json({ message: 'Folder deleted successfully.' });
   } catch (error) {
     console.error(error);
@@ -124,7 +124,7 @@ app.delete('/server/folder/delete', async (req, res) => {
 app.delete('/server/file/delete', async (req, res) => {
   try {
     const { filePath } = req.body;
-    await fs.promises.unlink(filePath);
+    await fsPromises.unlink(filePath);
     res.json({ message: 'File deleted successfully.' });
   } catch (error) {
     console.error(error);
@@ -133,35 +133,81 @@ app.delete('/server/file/delete', async (req, res) => {
 });
 // 🦟
 
-// 9.🗿RENAME FETCH ✏️✏️✏️✏️✏️✏️✏️✏️
-app.post('/rename', (req, res) => {
-  console.log("Received request to rename file/folder:");
-  if (!req.body || !req.body.oldPath || !req.body.newName) {
-    res.status(400).send({
-      error: 'Bad request, missing oldPath or newName property in the request body'
-    });
-    return;
+// 9.🗿RENAME FETCH folderPath ✏️✏️✏️✏️✏️✏️✏️✏️
+app.put('/server/folder/rename', async (req, res) => {
+  try {
+    const { folderPath, newFolderName } = req.body;
+    const pathArray = folderPath.split("/");
+    const oldFolderName = pathArray.pop();
+    pathArray.push(newFolderName);
+    const newFolderPath = pathArray.join("/");
+    await fsPromises.rename(folderPath, newFolderPath);
+    res.json({ message: 'Folder renamed successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while renaming the folder.' });
   }
-  const oldPath = req.body.oldPath;
-  const newName = req.body.newName;
-  const newPath = path.join(path.dirname(oldPath), newName);
-  console.log("New Path: ", newPath);
-  console.log("Old Path: ", oldPath);
-  fs.rename(oldPath, newPath, (err) => {
-    if (err) {
-      console.error("Error renaming file/folder: ", err);
-      res.status(500).send({
-        error: 'Error renaming file or folder'
-      });
-      return;
-    }
-    console.log("File/folder renamed successfully")
-    res.send({
-      success: 'File or folder renamed successfully'
-    });
-  });
 });
 // 🦟
+
+// 9.🗿RENAME FETCH filePath ✏️✏️✏️✏️✏️✏️✏️✏️
+app.put('/server/file/rename', (req, res) => {
+  const { filePath, newFileName } = req.body;
+  const newPath = path.join(path.dirname(filePath), newFileName);
+  console.log("filePath: " + filePath);
+  console.log("newFileName: " + newFileName);
+  console.log("newPath: " + newPath);
+
+  fs.promises.rename(filePath, newPath)
+    .then(() => {
+      res.send({ message: 'File renamed successfully' });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send({ error: 'Error renaming file' });
+    });
+});
+
+// 🗿 ADD A FOLDER/FILE ☠️ 🗿 DELETE A FOLDER/FILE ☠️
+app.post('/server/add', (req, res) => {
+  const folderPath = req.body.folderPath;
+  const newFileFolderName = req.body.newFileFolderName;
+  const fullPath = path.join(__dirname, folderPath, newFileFolderName);
+
+  if (path.extname(newFileFolderName) === '') {
+    fs.mkdir(fullPath, { recursive: true }, (err) => {
+      if (err) {
+        console.error('Error creating folder: ', err);
+        res.status(500).send({ error: 'Error creating folder' });
+        return;
+      }
+      res.json({ success: true });
+    });
+  } else {
+    fs.writeFile(fullPath, '', (err) => {
+      if (err) {
+        console.error('Error creating file: ', err);
+        res.status(500).send({ error: 'Error creating file' });
+        return;
+      }
+      res.json({ success: true });
+    });
+  }
+});
+
+// 📄 READ FILE 📄 
+app.post('/server/file/read', (req, res) => {
+  const filePath = req.body.filePath;
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error reading file');
+    } else {
+      res.send(data);
+      console.log(data);
+    }
+  });
+});
 
 // 10. 🔘🔘🔘
 app.listen(PORT, () => {
