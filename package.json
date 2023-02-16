@@ -11,7 +11,7 @@
   "author": "puskarwagle",
   "license": "ISC",
   "dependencies": {
-    "codemirror": "^6.0.1",
+    "codemirror": "^6.65.7",
     "express": "^4.18.2",
     "fs": "^0.0.1-security"
   },

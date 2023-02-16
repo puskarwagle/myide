@@ -119,21 +119,43 @@ function addFileButtonListeners(fileNameBtn, fileId) {
 
 
 
+
+
+
+
 function createCodeMirrorElement(parent) {
-  const textarea = document.createElement('textarea');
   const codeMirror = CodeMirror(parent, {
     value: '',
     mode: 'javascript',
-    theme: 'default',
+    theme: 'blackboard',
     lineNumbers: true,
+    indentUnit: 4,
+    smartIndent: true,
+    autoCloseBrackets: true,
+    matchBrackets: true,
+    scrollbarStyle: 'simple',
+    extraKeys: {
+      'Ctrl-Space': 'autocomplete',
+      'Cmd-Space': 'autocomplete',
+      Tab: function(cm) {
+        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+        cm.replaceSelection(spaces);
+      }
+    }
   });
-  parent.appendChild(codeMirror.getWrapperElement());
+  
+  // Add font size slider
+  const fontSizeSlider = parent.querySelector('#font-size-slider');
+  fontSizeSlider.addEventListener('input', (event) => {
+    const fontSize = event.target.value + 'px';
+    codeMirror.getWrapperElement().style.fontSize = fontSize;
+  });
+  
+  return codeMirror.getWrapperElement();
 }
 
 const parent = document.getElementById('Terminal');
 createCodeMirrorElement(parent);
-
-
 
 
 
