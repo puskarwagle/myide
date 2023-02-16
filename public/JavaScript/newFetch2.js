@@ -46,11 +46,22 @@ function createTextFile(data, filePath) {
   `;
   FileButtonsAll.appendChild(fileNameBtn);
 
-  const fileContent = document.createElement('textarea');
+  const fileContent = document.createElement('div');
   fileContent.classList.add('fileContent');
   const fileId = filePath.replace(/\//g, '-');
   fileContent.id = `fileContent-${fileId}`;
-  fileContent.textContent = data;
+
+  const textarea = document.createElement('textarea');
+  textarea.style.display = 'block';
+  fileContent.appendChild(textarea);
+  textarea.textContent = data;
+
+  const codemirror = CodeMirror.fromTextArea(textarea, {
+    lineNumbers: true,
+    mode: 'javascript', // set the mode to whatever language you want to highlight
+    theme: 'default', // set the theme to whatever you prefer
+  });
+  codemirror.setValue(data);
   fileContentsAll.appendChild(fileContent);
 
   // Hide all other file contents
@@ -63,6 +74,7 @@ function createTextFile(data, filePath) {
   fileContent.style.display = 'block';
   addFileButtonListeners(fileNameBtn, fileId);
 }
+
 
 // 8. Close and toggle buttons on file headers
 function addFileButtonListeners(fileNameBtn, fileId) {
@@ -90,3 +102,75 @@ function addFileButtonListeners(fileNameBtn, fileId) {
   });
 }
 // 🧏
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function createCodeMirrorElement(parent) {
+  const textarea = document.createElement('textarea');
+  const codeMirror = CodeMirror(parent, {
+    value: '',
+    mode: 'javascript',
+    theme: 'default',
+    lineNumbers: true,
+  });
+  parent.appendChild(codeMirror.getWrapperElement());
+}
+
+const parent = document.getElementById('Terminal');
+createCodeMirrorElement(parent);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

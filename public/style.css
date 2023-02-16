@@ -125,7 +125,6 @@ ul div {
 #OpenedFiles .fileContent {
   padding: 1vw;
   background-color: rgba(128, 128, 128, 0.0);
-  font-size: 4vw;
   border-bottom: 3px solid #ccc;
   border-radius: 5px;
   overflow: auto;
@@ -133,5 +132,9 @@ ul div {
   min-height:100vh;
   width:100%;
 }
-
+.fileContent .CodeMirror {
+  min-height:100vh;
+  overflow: auto;
+  display: block;
+}
 
