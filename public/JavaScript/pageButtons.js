@@ -1,5 +1,5 @@
 // console.log("pageButtons.js");
-document.getElementById("ListOfFilesNFolders").style.display ="block";
+document.getElementById("FileManager").style.display ="block";
 document.getElementById("OpenedFiles").style.display ="none";
 document.getElementById("LocalHost").style.display ="none";
 document.getElementById("Terminal").style.display ="none";
@@ -12,7 +12,7 @@ const buttons = [
   document.getElementById("TerminalBtn")
 ];
 const pages = [
-  document.getElementById("ListOfFilesNFolders"),
+  document.getElementById("FileManager"),
   document.getElementById("OpenedFiles"),
   document.getElementById("LocalHost"),
   document.getElementById("Terminal")

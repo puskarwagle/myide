@@ -204,7 +204,7 @@ app.post('/server/file/read', (req, res) => {
       res.status(500).send('Error reading file');
     } else {
       res.send(data);
-      console.log(data);
+      // console.log(data);
     }
   });
 });

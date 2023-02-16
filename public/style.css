@@ -29,9 +29,12 @@ body {
   display:none;
 }
 /* FILE EXPLORER 🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️📔🗃️🗃️🗃️🗂️ */
-#ListOfFilesNFolders, #LocalHost, #Terminal, #OpenedFiles {
+#FileManager, #LocalHost, #Terminal, #OpenedFiles {
   border: 6px dashed cornflowerblue;
   margin:0 2vw;
+}
+#tree{
+  border:2px solid red;
 }
 .children {
   display:none;
@@ -92,6 +95,8 @@ ul div {
   border: 3px solid #f50fce;
   margin-bottom: 2vw;
   display: flex;
+  min-height:8vw;
+  overflow: auto;
 }
 #OpenedFiles #FileButtonsAll .fileNameBtn {
   display: inline-flex;
@@ -115,14 +120,18 @@ ul div {
 }
 #OpenedFiles #fileContentsAll {
   border:3px solid #f50fce;
-}
-#OpenedFiles #fileContentsAll > div:not(.open) {
-  display: none;
+  min-height:100vh;
 }
 #OpenedFiles .fileContent {
-  padding:1vw;
+  padding: 1vw;
   background-color: rgba(128, 128, 128, 0.0);
-  font-size:4vw;
-  border: 1px solid #ccc;
+  font-size: 4vw;
+  border-bottom: 3px solid #ccc;
   border-radius: 5px;
+  overflow: auto;
+  display: none;
+  min-height:100vh;
+  width:100%;
 }
+
+

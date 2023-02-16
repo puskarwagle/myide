@@ -1,4 +1,4 @@
-// 🗿 DELETE FOLDER ☠️
+// 1. 🗿 DELETE FOLDER ☠️
 document.addEventListener("click", function(event) {
   if (event.target.classList.contains("emoji") && event.target.classList.contains("fodel")) {
     let id = event.target.id;
@@ -27,7 +27,7 @@ document.addEventListener("click", function(event) {
     }
   }
 });
-// 🗿 DELETE A FILE ☠️ 🗿 DELETE A FILE ☠️
+// 2. 🗿 DELETE A FILE ☠️ 🗿 DELETE A FILE ☠️
 document.addEventListener("click", function(event) {
   if (event.target.classList.contains("emoji") && event.target.classList.contains("fidel")) {
     let id = event.target.id;
@@ -57,7 +57,7 @@ document.addEventListener("click", function(event) {
   }
 });
 
-// 🖊️ RENAME FOLDER 📂
+// 3. 🖊️ RENAME FOLDER 📂
 document.addEventListener("click", function(event) {
   if (event.target.classList.contains("emoji") && event.target.classList.contains("foren")) {
     let id = event.target.id;
@@ -84,7 +84,7 @@ document.addEventListener("click", function(event) {
     });
   }
 });
-// 📄 RENAME FILE 📄
+// 4. 📄 RENAME FILE 📄
 document.addEventListener("click", function(event) {
   if (event.target.classList.contains("emoji") && event.target.classList.contains("firen")) {
     let id = event.target.id;
@@ -112,7 +112,7 @@ document.addEventListener("click", function(event) {
   }
 });
 
-// 🗿 Add to FOLDER ➕
+// 5. 🗿 Add to FOLDER ➕
 document.addEventListener("click", function(event) {
   if (event.target.classList.contains("emoji") && event.target.classList.contains("foadd")) {
     let newFileFolderName = prompt("Enter the name for the new file/folder:");
@@ -136,87 +136,5 @@ document.addEventListener("click", function(event) {
   }
 });
 
-// 📄 READFILE 📄
-document.addEventListener("click", function(event) {
-  if (event.target.classList.contains("file-area") || event.target.classList.contains("file-span")) {
-    if (!event.target.classList.contains("emoji")) {
-      let id = event.target.closest(".file-area").id;
-      let filePath = id.split("-")[1];
-      let fileName = filePath.split('/').pop();
-      console.log("fileName: " + fileName);
-      console.log("filePath: " + filePath);
-      
-      fetch('/server/file/read', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ filePath })
-      })
-      .then(response => {
-        return response.text();
-      })
-      .then(data => {
-        createTextFile(data, fileName);
-        document.getElementById("FilesBtn").click();
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    }
-  }
-});
 
-function createTextFile(data, fileName) {
-  const parent = document.getElementById('OpenedFiles');
-  const FileButtonsAll = document.getElementById('FileButtonsAll');
-  const fileContentsAll = document.getElementById('fileContentsAll');
-  
-  const fileNameBtn = document.createElement('div');
-  fileNameBtn.classList.add('fileNameBtn');
-  fileNameBtn.id = `fileNameBtn-${fileName}`;
-  fileNameBtn.innerHTML = `
-    <button class="fileName">${fileName}</button>
-    <button class="close"><i class="fas fa-times"></i></button>
-  `;
-  FileButtonsAll.appendChild(fileNameBtn);
 
-  const fileContent = document.createElement('div');
-  fileContent.classList.add('fileContent');
-  fileContent.id = `fileContent-${fileName}`;
-  fileContent.textContent = data;
-  fileContentsAll.appendChild(fileContent);
-  
-  addFileButtonListeners(fileNameBtn);
-}
-
-function addFileButtonListeners(fileNameBtn) {
-  const closeButton = fileNameBtn.querySelector('.close');
-  const fileName = fileNameBtn.querySelector('.fileName');
-
-  closeButton.addEventListener('click', function() {
-    fileNameBtn.remove();
-    const fileContent = document.getElementById(`fileContent-${fileName.textContent}`);
-    if (fileContent) {
-      fileContent.remove();
-    }
-  });
-
-  fileName.addEventListener('click', function() {
-    const fileContent = document.getElementById(`fileContent-${fileName.textContent}`);
-    if (fileContent) {
-      fileContent.classList.toggle('hidden');
-    }
-  });
-}
-
-fileContent.id = `fileContent-${fileName}`;
-
-// hide all file content divs except the current one
-const fileContents = document.querySelectorAll('#fileContentsAll > div');
-for (let i = 0; i < fileContents.length; i++) {
-  fileContents[i].classList.remove('open');
-}
-// get the current file content div and add a class to it
-const currentFileContent = document.getElementById(`fileContent-${fileName}`);
-currentFileContent.classList.add('open');
