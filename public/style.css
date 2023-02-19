@@ -145,3 +145,10 @@ ul div {
 .fileContent .CodeMirror:focus {
   display: block;
 }
+.themeButton, .modeButton {
+	border:;
+	padding:0 0.3vw 0 0.3vw;
+	margin:0 0 0 0;
+	min-width:10vw;
+	background-color:transparent;
+}

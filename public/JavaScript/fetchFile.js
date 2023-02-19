@@ -41,14 +41,15 @@ function createCodeMirrorElement(parent) {
   }, {
     value: codeMirrorElement.value,
     lineNumbers: true,
-    mode: 'css',
+    mode: 'javascript',
     autofocus: true,
     theme: 'default'
   });
 
   // Add mode selector
   const modeButton = document.createElement('button');
-  modeButton.textContent = 'JavaScript';
+  modeButton.classList.add('modeButton');
+  modeButton.textContent = 'javascript';
   const modes = [
     'javascript',
     'htmlmixed',
@@ -66,6 +67,7 @@ function createCodeMirrorElement(parent) {
 
   // Add theme selector
   const themeButton = document.createElement('button');
+  themeButton.classList.add('themeButton');
   themeButton.textContent = 'default';
   const themes = [
     'default',
@@ -88,11 +90,15 @@ function createCodeMirrorElement(parent) {
   fontSizeSlider.min = '5';
   fontSizeSlider.max = '50';
   fontSizeSlider.value = '5';
+  fontSizeSlider.style.transform = 'rotate(270deg)';
+	fontSizeSlider.style.width = '4vw';
+	fontSizeSlider.style.height = '4vw';
   fontSizeSlider.addEventListener('input', () => {
     const fontSize = fontSizeSlider.value;
     codeMirrorWrapper.style.fontSize = `${fontSize}px`;
   });
 
+	// Append to FileMenu
   const fileMenu = document.querySelector('#FileMenu');
   fileMenu.appendChild(fontSizeSlider);
   fileMenu.appendChild(modeButton);
