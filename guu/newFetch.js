@@ -30,34 +30,12 @@ document.addEventListener("click", function(event) {
   }
 });
 
-
-
-// 8. CodeMirror .fileContent
-function createCodeMirrorElement(parent) {
-  const codeMirrorWrapper = document.createElement('div');
-  const codeMirrorElement = document.createElement('textarea');
-  codeMirrorElement.value = '';
-  codeMirrorWrapper.classList.add('CodeMirror');
-  parent.appendChild(codeMirrorWrapper);
-  const editor = CodeMirror(function(elt) {
-    codeMirrorWrapper.appendChild(elt);
-  }, {
-    value: codeMirrorElement.value,
-    lineNumbers: true,
-    mode: 'javascript'
-  });
-  
-  return codeMirrorWrapper;
-}
-
-
 // 7. Text editor
 function createTextFile(data, filePath) {
   const parent = document.getElementById('OpenedFiles');
   const FileButtonsAll = document.getElementById('FileButtonsAll');
   const fileContentsAll = document.getElementById('fileContentsAll');
   
-  // Headers
   const fileNameBtn = document.createElement('div');
   fileNameBtn.classList.add('fileNameBtn');
   const fileName = filePath.split('/').pop();
@@ -68,17 +46,16 @@ function createTextFile(data, filePath) {
   `;
   FileButtonsAll.appendChild(fileNameBtn);
 
-  // File content
   const fileContent = document.createElement('div');
   fileContent.classList.add('fileContent');
   const fileId = filePath.replace(/\//g, '-');
   fileContent.id = `fileContent-${fileId}`;
-  fileContentsAll.appendChild(fileContent);
-
-  // Add CodeMirror element
-  const codeMirrorElement = createCodeMirrorElement(fileContent);
-  codeMirrorElement.firstChild.CodeMirror.setValue(data); // set value to data
+ 
+ // 
+  const codeMirrorElement = createCodeMirrorElement(data, 'javascript', 'default');
   fileContent.appendChild(codeMirrorElement);
+  fileContentsAll.appendChild(fileContent);
+//
 
   // Hide all other file contents
   const fileContents = fileContentsAll.querySelectorAll('.fileContent');
@@ -91,53 +68,36 @@ function createTextFile(data, filePath) {
   addFileButtonListeners(fileNameBtn, fileId);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 8. Close and toggle buttons on file headers
-function addFileButtonListeners(fileNameBtn, fileId) {
-  const closeButton = fileNameBtn.querySelector('.close');
-  const fileName = fileNameBtn.querySelector('.fileName');
-  const filePath = fileName.textContent;
-  const fileContent = document.getElementById(`fileContent-${fileId}`);
-
-  closeButton.addEventListener('click', function() {
-    fileNameBtn.remove();
-    if (fileContent) {
-      fileContent.remove();
-     // removeOpenedFileId(filePath);
+function createCodeMirrorElement(parent) {
+  const codeMirror = CodeMirror(parent, {
+    value: '',
+    mode: 'javascript',
+    theme: 'blackboard',
+    lineNumbers: true,
+    indentUnit: 4,
+    smartIndent: true,
+    autoCloseBrackets: true,
+    matchBrackets: true,
+    scrollbarStyle: 'simple',
+    extraKeys: {
+      'Ctrl-Space': 'autocomplete',
+      'Cmd-Space': 'autocomplete',
+      Tab: function(cm) {
+        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+        cm.replaceSelection(spaces);
+      }
     }
   });
 
-  fileName.addEventListener('click', function() {
-    if (fileContent) {
-      const allFileContents = document.querySelectorAll('.fileContent');
-      allFileContents.forEach((content) => {
-        content.style.display = 'none';
-      });
-      fileContent.style.display = 'block';
-    }
+  // Add font size slider
+  const fontSizeSlider = parent.querySelector('#font-size-slider');
+  fontSizeSlider.addEventListener('input', (event) => {
+    const fontSize = event.target.value + 'px';
+    codeMirror.getWrapperElement().style.fontSize = fontSize;
   });
+  
+  return codeMirror.getWrapperElement();
 }
-// 🧏
+
+const parent = document.getElementById('Terminal');
+createCodeMirrorElement(parent);
