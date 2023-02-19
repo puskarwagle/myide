@@ -16,7 +16,7 @@ body {
   padding: 2vw;
   border:1px solid grey;
   text-align: center;
-  font-size: 5vw;
+  font-size: 2vw;
 }
 .pages {
   border: 2px solid cornflowerblue;
@@ -24,7 +24,6 @@ body {
   display: flex;
   flex-direction:column;
   border-radius: 5px;
-  font-size: 5vw;
   min-height:80vh;
   display:none;
 }
@@ -34,7 +33,7 @@ body {
   margin:0 2vw;
 }
 #tree{
-  border:2px solid red;
+  border:0px solid red;
 }
 .children {
   display:none;
@@ -55,11 +54,9 @@ ul div {
 }
 .file-area span:nth-child(1) {
    margin-right:auto;
-   font-size:3.4vw;
 }
 .file-area span:nth-child(2) {
    padding:0 10vw;
-   font-size:3.4vw;
 }
 .folder-area {
   border-left: 2px solid #f50fce;
@@ -70,12 +67,10 @@ ul div {
 }
 .folder-area span:nth-child(2) {
    padding:0 2vw;
-   font-size:3.5vw;
 }
 .emoji {
   border:0px solid gold;
   padding:2vw 2vw;
-  font-size:3.5vw;
 }
 .emoji:active {
   background-color: blue;
@@ -92,10 +87,10 @@ ul div {
   padding:2vw;
 }
 #OpenedFiles #FileButtonsAll {
-  border: 3px solid #f50fce;
+  border: 0px solid #f50fce;
   margin-bottom: 2vw;
   display: flex;
-  min-height:8vw;
+  min-height:0vw;
   overflow: auto;
 }
 #OpenedFiles #FileMenu {
@@ -116,32 +111,37 @@ ul div {
 }
 #OpenedFiles .fileNameBtn .fileName {
   font-weight: bold;
-  font-size: 6vw;
+  font-size: 2vw;
 }
 #OpenedFiles .fileNameBtn .close {
   background-color: #dc3545;
-  font-size:6vw;
+  font-size:2vw;
   padding:0 1vw;
   border: none;
   cursor: pointer;
 }
 #OpenedFiles #fileContentsAll {
-  border:3px solid #f50fce;
+  border:0px solid #f50fce;
   min-height:100vh;
 }
 #OpenedFiles .fileContent {
-  padding: 1vw;
+  padding: 0vw 0vw;
   background-color: rgba(128, 128, 128, 0.0);
   border-bottom: 3px solid #ccc;
   border-radius: 5px;
-  overflow: auto;
   display: none;
+  overflow: auto;
+  height:100%;
   min-height:100vh;
   width:100%;
 }
 .fileContent .CodeMirror {
-  min-height:100vh;
-  overflow: auto;
+	min-height:100vh;
+	height:100%;
   display: block;
 }
 
+.fileContent:focus-within .CodeMirror,
+.fileContent .CodeMirror:focus {
+  display: block;
+}

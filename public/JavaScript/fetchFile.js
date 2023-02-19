@@ -20,7 +20,6 @@ document.addEventListener("click", function(event) {
       })
       .then(data => {
         createTextFile(data, fileName);
-        // saveOpenedFileId(id);
       })
       .catch(error => {
         console.error(error);
@@ -29,8 +28,6 @@ document.addEventListener("click", function(event) {
     }
   }
 });
-
-
 
 // 8. CodeMirror .fileContent
 function createCodeMirrorElement(parent) {
@@ -44,12 +41,65 @@ function createCodeMirrorElement(parent) {
   }, {
     value: codeMirrorElement.value,
     lineNumbers: true,
-    mode: 'javascript'
+    mode: 'css',
+    autofocus: true,
+    theme: 'default'
   });
-  
+
+  // Add mode selector
+  const modeButton = document.createElement('button');
+  modeButton.textContent = 'JavaScript';
+  const modes = [
+    'javascript',
+    'htmlmixed',
+    'css',
+    'xml',
+    'markdown'
+  ];
+  let currentModeIndex = 0;
+  modeButton.addEventListener('click', () => {
+    currentModeIndex = (currentModeIndex + 1) % modes.length;
+    const currentMode = modes[currentModeIndex];
+    modeButton.textContent = currentMode;
+    editor.setOption('mode', currentMode);
+  });
+
+  // Add theme selector
+  const themeButton = document.createElement('button');
+  themeButton.textContent = 'default';
+  const themes = [
+    'default',
+    '3024-day',
+    '3024-night',
+    'ambiance',
+    'ambiance-mobile'
+  ];
+  let currentThemeIndex = 0;
+  themeButton.addEventListener('click', () => {
+    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+    const currentTheme = themes[currentThemeIndex];
+    themeButton.textContent = currentTheme;
+    editor.setOption('theme', currentTheme);
+  });
+
+  // Add font size slider
+  const fontSizeSlider = document.createElement('input');
+  fontSizeSlider.type = 'range';
+  fontSizeSlider.min = '5';
+  fontSizeSlider.max = '50';
+  fontSizeSlider.value = '5';
+  fontSizeSlider.addEventListener('input', () => {
+    const fontSize = fontSizeSlider.value;
+    codeMirrorWrapper.style.fontSize = `${fontSize}px`;
+  });
+
+  const fileMenu = document.querySelector('#FileMenu');
+  fileMenu.appendChild(fontSizeSlider);
+  fileMenu.appendChild(modeButton);
+  fileMenu.appendChild(themeButton);
+
   return codeMirrorWrapper;
 }
-
 
 // 7. Text editor
 function createTextFile(data, filePath) {
@@ -76,9 +126,14 @@ function createTextFile(data, filePath) {
   fileContentsAll.appendChild(fileContent);
 
   // Add CodeMirror element
-  const codeMirrorElement = createCodeMirrorElement(fileContent);
-  codeMirrorElement.firstChild.CodeMirror.setValue(data); // set value to data
-  fileContent.appendChild(codeMirrorElement);
+	const codeMirrorElement = createCodeMirrorElement(fileContent);
+	if (data) {
+	  const codeMirrorInstance = codeMirrorElement.firstChild.CodeMirror;
+  	codeMirrorInstance.setValue(data);
+ 	  codeMirrorInstance.focus();
+	}
+	fileContent.appendChild(codeMirrorElement);
+
 
   // Hide all other file contents
   const fileContents = fileContentsAll.querySelectorAll('.fileContent');
@@ -90,30 +145,6 @@ function createTextFile(data, filePath) {
   fileContent.style.display = 'block';
   addFileButtonListeners(fileNameBtn, fileId);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 8. Close and toggle buttons on file headers
 function addFileButtonListeners(fileNameBtn, fileId) {
