@@ -1,0 +1,97 @@
+function createAceElement(parent) {
+  const editorElement = document.createElement('div');
+  editorElement.style.width = '100%';
+  editorElement.style.height = '100%';
+  parent.appendChild(editorElement);
+
+  const aceInstance = ace.edit(editorElement);
+  aceInstance.setTheme('ace/theme/chrome');
+  aceInstance.session.setMode('ace/mode/html');
+  aceInstance.setOptions({
+    enableBasicAutocompletion: true,
+    enableSnippets: true,
+    enableLiveAutocompletion: true,
+  });
+
+  return aceInstance;
+}
+
+
+
+
+// heyyy ace
+function createAceElement(parent) {
+  const editorElement = document.createElement('div');
+  editorElement.style.width = '100%';
+  editorElement.style.height = '100%';
+  parent.appendChild(editorElement);
+
+  const aceInstance = ace.edit(editorElement);
+  aceInstance.setTheme('ace/theme/chrome');
+  aceInstance.session.setMode('ace/mode/html');
+  aceInstance.setOptions({
+    enableBasicAutocompletion: true,
+    enableSnippets: true,
+    enableLiveAutocompletion: true,
+  });
+
+  // Add mode selector
+  const modeButton = document.createElement('button');
+  modeButton.classList.add('modeButton');
+  modeButton.textContent = 'javascript';
+  const modes = [
+    'javascript',
+    'html',
+    'css',
+    'xml',
+    'markdown'
+  ];
+  let currentModeIndex = 0;
+  modeButton.addEventListener('click', () => {
+    currentModeIndex = (currentModeIndex + 1) % modes.length;
+    const currentMode = modes[currentModeIndex];
+    modeButton.textContent = currentMode;
+    editor.getSession().setMode(`ace/mode/${currentMode}`);
+  });
+
+  // Add theme selector
+  const themeButton = document.createElement('button');
+  themeButton.classList.add('themeButton');
+  themeButton.textContent = 'chrome';
+  const themes = [
+    'chrome',
+    'eclipse',
+    'monokai',
+    'github',
+    'tomorrow'
+  ];
+  let currentThemeIndex = 0;
+  themeButton.addEventListener('click', () => {
+    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+    const currentTheme = themes[currentThemeIndex];
+    themeButton.textContent = currentTheme;
+    editor.setTheme(`ace/theme/${currentTheme}`);
+  });
+
+  // Add font size slider
+  const fontSizeSlider = document.createElement('input');
+  fontSizeSlider.type = 'range';
+  fontSizeSlider.min = '5';
+  fontSizeSlider.max = '50';
+  fontSizeSlider.value = '16';
+  fontSizeSlider.style.transform = 'rotate(270deg)';
+  fontSizeSlider.style.width = '4vw';
+  fontSizeSlider.style.height = '4vw';
+  fontSizeSlider.addEventListener('input', () => {
+    const fontSize = fontSizeSlider.value;
+    editor.setFontSize(`${fontSize}px`);
+  });
+
+  // Append to FileMenu
+  const fileMenu = document.querySelector('#FileMenu');
+  fileMenu.appendChild(fontSizeSlider);
+  fileMenu.appendChild(modeButton);
+  fileMenu.appendChild(themeButton);
+
+  return aceInstance;
+}

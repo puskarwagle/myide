@@ -121,9 +121,11 @@ ul div {
   cursor: pointer;
 }
 #OpenedFiles #fileContentsAll {
-  border:0px solid #f50fce;
-  min-height:100vh;
+  border: 0px solid #f50fce;
+  min-height: 100vh;
+  height: 100vh;
 }
+
 #OpenedFiles .fileContent {
   padding: 0vw 0vw;
   background-color: rgba(128, 128, 128, 0.0);
@@ -131,24 +133,7 @@ ul div {
   border-radius: 5px;
   display: none;
   overflow: auto;
-  height:100%;
-  min-height:100vh;
-  width:100%;
-}
-.fileContent .CodeMirror {
-	min-height:100vh;
-	height:100%;
-  display: block;
+  height: 100%;
 }
 
-.fileContent:focus-within .CodeMirror,
-.fileContent .CodeMirror:focus {
-  display: block;
-}
-.themeButton, .modeButton {
-	border:;
-	padding:0 0.3vw 0 0.3vw;
-	margin:0 0 0 0;
-	min-width:10vw;
-	background-color:transparent;
-}
+

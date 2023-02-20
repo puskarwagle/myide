@@ -29,23 +29,21 @@ document.addEventListener("click", function(event) {
   }
 });
 
-// 8. CodeMirror .fileContent
-function createCodeMirrorElement(parent) {
-  const codeMirrorWrapper = document.createElement('div');
-  const codeMirrorElement = document.createElement('textarea');
-  codeMirrorElement.value = '';
-  codeMirrorWrapper.classList.add('CodeMirror');
-  parent.appendChild(codeMirrorWrapper);
-  const editor = CodeMirror(function(elt) {
-    codeMirrorWrapper.appendChild(elt);
-  }, {
-    value: codeMirrorElement.value,
-    lineNumbers: true,
-    mode: 'javascript',
-    autofocus: true,
-    theme: 'default',
-    autoCloseBrackets: true,
-    autoCloseTags: true
+// ajkhfds
+// heyyy ace
+function createAceElement(parent) {
+  const editorElement = document.createElement('div');
+  editorElement.style.width = '100%';
+  editorElement.style.height = '100%';
+  parent.appendChild(editorElement);
+
+  const aceInstance = ace.edit(editorElement);
+  aceInstance.setTheme('ace/theme/chrome');
+  aceInstance.session.setMode('ace/mode/html');
+  aceInstance.setOptions({
+    enableBasicAutocompletion: true,
+    enableSnippets: true,
+    enableLiveAutocompletion: true,
   });
 
   // Add mode selector
@@ -54,7 +52,7 @@ function createCodeMirrorElement(parent) {
   modeButton.textContent = 'javascript';
   const modes = [
     'javascript',
-    'htmlmixed',
+    'html',
     'css',
     'xml',
     'markdown'
@@ -64,26 +62,26 @@ function createCodeMirrorElement(parent) {
     currentModeIndex = (currentModeIndex + 1) % modes.length;
     const currentMode = modes[currentModeIndex];
     modeButton.textContent = currentMode;
-    editor.setOption('mode', currentMode);
+    editor.getSession().setMode(`ace/mode/${currentMode}`);
   });
 
   // Add theme selector
   const themeButton = document.createElement('button');
   themeButton.classList.add('themeButton');
-  themeButton.textContent = 'default';
+  themeButton.textContent = 'chrome';
   const themes = [
-    'default',
-    '3024-day',
-    '3024-night',
-    'ambiance',
-    'ambiance-mobile'
+    'chrome',
+    'eclipse',
+    'monokai',
+    'github',
+    'tomorrow'
   ];
   let currentThemeIndex = 0;
   themeButton.addEventListener('click', () => {
     currentThemeIndex = (currentThemeIndex + 1) % themes.length;
     const currentTheme = themes[currentThemeIndex];
     themeButton.textContent = currentTheme;
-    editor.setOption('theme', currentTheme);
+    editor.setTheme(`ace/theme/${currentTheme}`);
   });
 
   // Add font size slider
@@ -91,25 +89,26 @@ function createCodeMirrorElement(parent) {
   fontSizeSlider.type = 'range';
   fontSizeSlider.min = '5';
   fontSizeSlider.max = '50';
-  fontSizeSlider.value = '5';
+  fontSizeSlider.value = '16';
   fontSizeSlider.style.transform = 'rotate(270deg)';
-	fontSizeSlider.style.width = '4vw';
-	fontSizeSlider.style.height = '4vw';
+  fontSizeSlider.style.width = '4vw';
+  fontSizeSlider.style.height = '4vw';
   fontSizeSlider.addEventListener('input', () => {
     const fontSize = fontSizeSlider.value;
-    codeMirrorWrapper.style.fontSize = `${fontSize}px`;
+    editor.setFontSize(`${fontSize}px`);
   });
 
-	// Append to FileMenu
+  // Append to FileMenu
   const fileMenu = document.querySelector('#FileMenu');
   fileMenu.appendChild(fontSizeSlider);
   fileMenu.appendChild(modeButton);
   fileMenu.appendChild(themeButton);
 
-  return codeMirrorWrapper;
+  return aceInstance;
 }
 
-// 7. Text editor
+
+// 8. heyyy new 
 function createTextFile(data, filePath) {
   const parent = document.getElementById('OpenedFiles');
   const FileButtonsAll = document.getElementById('FileButtonsAll');
@@ -133,15 +132,14 @@ function createTextFile(data, filePath) {
   fileContent.id = `fileContent-${fileId}`;
   fileContentsAll.appendChild(fileContent);
 
-  // Add CodeMirror element
-	const codeMirrorElement = createCodeMirrorElement(fileContent);
-	if (data) {
-	  const codeMirrorInstance = codeMirrorElement.firstChild.CodeMirror;
-  	codeMirrorInstance.setValue(data);
- 	  codeMirrorInstance.focus();
-	}
-	fileContent.appendChild(codeMirrorElement);
-
+  // Add Ace editor element
+  const aceEditorElement = createAceElement(fileContent);
+  if (data) {
+    aceEditorElement.setValue(data);
+    aceEditorElement.focus();
+  }
+  //console.log(aceEditorElement);
+  //fileContent.appendChild(aceEditorElement);
 
   // Hide all other file contents
   const fileContents = fileContentsAll.querySelectorAll('.fileContent');
@@ -154,7 +152,9 @@ function createTextFile(data, filePath) {
   addFileButtonListeners(fileNameBtn, fileId);
 }
 
-// 8. Close and toggle buttons on file headers
+
+
+// 9. Close and toggle buttons on file headers
 function addFileButtonListeners(fileNameBtn, fileId) {
   const closeButton = fileNameBtn.querySelector('.close');
   const fileName = fileNameBtn.querySelector('.fileName');
