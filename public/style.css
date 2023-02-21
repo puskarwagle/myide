@@ -54,9 +54,11 @@ ul div {
 }
 .file-area span:nth-child(1) {
    margin-right:auto;
+   cursor: pointer;
 }
 .file-area span:nth-child(2) {
    padding:0 10vw;
+   cursor: default;
 }
 .folder-area {
   border-left: 2px solid #f50fce;
@@ -64,13 +66,16 @@ ul div {
 }
 .folder-area span:nth-child(1) {
    margin-right:auto;
+   cursor: pointer;
 }
 .folder-area span:nth-child(2) {
    padding:0 2vw;
+   cursor: default;
 }
 .emoji {
   border:0px solid gold;
   padding:2vw 2vw;
+  cursor: pointer;
 }
 .emoji:active {
   background-color: blue;
@@ -92,6 +97,7 @@ ul div {
   display: flex;
   min-height:0vw;
   overflow: auto;
+  pointer: cursor;
 }
 #OpenedFiles #FileMenu {
   border: 0px solid #f50fce;

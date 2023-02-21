@@ -29,9 +29,7 @@ document.addEventListener("click", function(event) {
   }
 });
 
-// ajkhfds
-// heyyy ace
-function createAceElement(parent) {
+function createAceElement(parent, language = 'javascript') {
   const editorElement = document.createElement('div');
   editorElement.style.width = '100%';
   editorElement.style.height = '100%';
@@ -39,17 +37,29 @@ function createAceElement(parent) {
 
   const aceInstance = ace.edit(editorElement);
   aceInstance.setTheme('ace/theme/chrome');
-  aceInstance.session.setMode('ace/mode/html');
+
+  // Set mode based on file extension
+  const ext = language.toLowerCase();
+  if (ext === 'js') {
+    aceInstance.session.setMode('ace/mode/javascript');
+  } else if (ext === 'html') {
+    aceInstance.session.setMode('ace/mode/html');
+  } else if (ext === 'css') {
+    aceInstance.session.setMode('ace/mode/css');
+  } else if (ext === 'xml') {
+    aceInstance.session.setMode('ace/mode/xml');
+  } else if (ext === 'md') {
+    aceInstance.session.setMode('ace/mode/markdown');
+  }
+
   aceInstance.setOptions({
-    enableBasicAutocompletion: true,
-    enableSnippets: true,
-    enableLiveAutocompletion: true,
+    autoScrollEditorIntoView: true,
   });
 
   // Add mode selector
   const modeButton = document.createElement('button');
   modeButton.classList.add('modeButton');
-  modeButton.textContent = 'javascript';
+  modeButton.textContent = language;
   const modes = [
     'javascript',
     'html',
@@ -57,12 +67,12 @@ function createAceElement(parent) {
     'xml',
     'markdown'
   ];
-  let currentModeIndex = 0;
+  let currentModeIndex = modes.indexOf(language.toLowerCase());
   modeButton.addEventListener('click', () => {
     currentModeIndex = (currentModeIndex + 1) % modes.length;
     const currentMode = modes[currentModeIndex];
     modeButton.textContent = currentMode;
-    editor.getSession().setMode(`ace/mode/${currentMode}`);
+    aceInstance.getSession().setMode(`ace/mode/${currentMode}`);
   });
 
   // Add theme selector
@@ -81,7 +91,7 @@ function createAceElement(parent) {
     currentThemeIndex = (currentThemeIndex + 1) % themes.length;
     const currentTheme = themes[currentThemeIndex];
     themeButton.textContent = currentTheme;
-    editor.setTheme(`ace/theme/${currentTheme}`);
+    aceInstance.setTheme(`ace/theme/${currentTheme}`);
   });
 
   // Add font size slider
@@ -95,7 +105,7 @@ function createAceElement(parent) {
   fontSizeSlider.style.height = '4vw';
   fontSizeSlider.addEventListener('input', () => {
     const fontSize = fontSizeSlider.value;
-    editor.setFontSize(`${fontSize}px`);
+    aceInstance.setFontSize(`${fontSize}px`);
   });
 
   // Append to FileMenu
@@ -107,13 +117,12 @@ function createAceElement(parent) {
   return aceInstance;
 }
 
-
 // 8. heyyy new 
 function createTextFile(data, filePath) {
   const parent = document.getElementById('OpenedFiles');
   const FileButtonsAll = document.getElementById('FileButtonsAll');
   const fileContentsAll = document.getElementById('fileContentsAll');
-  
+
   // Headers
   const fileNameBtn = document.createElement('div');
   fileNameBtn.classList.add('fileNameBtn');
@@ -133,13 +142,11 @@ function createTextFile(data, filePath) {
   fileContentsAll.appendChild(fileContent);
 
   // Add Ace editor element
-  const aceEditorElement = createAceElement(fileContent);
+  const aceEditorElement = createAceElement(fileContent, getAceModeFromFilename(filePath));
   if (data) {
     aceEditorElement.setValue(data);
     aceEditorElement.focus();
   }
-  //console.log(aceEditorElement);
-  //fileContent.appendChild(aceEditorElement);
 
   // Hide all other file contents
   const fileContents = fileContentsAll.querySelectorAll('.fileContent');
@@ -149,8 +156,29 @@ function createTextFile(data, filePath) {
 
   // Show the newly created file content
   fileContent.style.display = 'block';
+
+  // Add file button listeners
   addFileButtonListeners(fileNameBtn, fileId);
 }
+
+function getAceModeFromFilename(filename) {
+  const extension = filename.split('.').pop();
+  switch (extension) {
+    case 'js':
+      return 'javascript';
+    case 'html':
+      return 'html';
+    case 'css':
+      return 'css';
+    case 'xml':
+      return 'xml';
+    case 'md':
+      return 'markdown';
+    default:
+      return 'text';
+  }
+}
+
 
 
 
