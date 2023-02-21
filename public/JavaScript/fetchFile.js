@@ -42,8 +42,11 @@ const themes = [
   "ace/theme/clouds",
   "ace/theme/cobalt",
 ];
+
 let mode = 'javascript';
 let fontSize = '14px';
+
+let aceInstance;
 
 function createAceElement(parent) {
   const editor = document.createElement('div');
@@ -51,13 +54,18 @@ function createAceElement(parent) {
   editor.style.height = '100%';
   parent.appendChild(editor);
 
-  const aceInstance = ace.edit(editor);
-  aceInstance.setTheme(themes[themeIndex]);
-  aceInstance.session.setMode(`ace/mode/${mode}`);
-  aceInstance.setFontSize(fontSize);
-  aceInstance.setOptions({
-    autoScrollEditorIntoView: true,
-  });
+  aceInstance = ace.edit(editor);
+aceInstance.setOptions({
+  autoScrollEditorIntoView: true,
+  highlightActiveLine: true,
+  highlightSelectedWord: true,
+  readOnly: false,
+  showFoldWidgets: true,
+  showGutter: true,
+  showInvisibles: false,
+  wrap: false
+});
+
 
   return aceInstance;
 }
@@ -68,9 +76,8 @@ themeSelector.innerHTML = themes
   .join("\n");
 themeSelector.addEventListener("change", function () {
   themeIndex = this.selectedIndex;
-  const editor = ace.edit("editor");
   const newTheme = themes[themeIndex];
-  editor.setTheme(newTheme);
+  aceInstance.setTheme(newTheme);
 });
 
 const modeSelector = document.createElement("select");
@@ -88,8 +95,7 @@ modeSelector.innerHTML = `
 `;
 modeSelector.addEventListener("change", function () {
   mode = this.value;
-  const editor = ace.edit("editor");
-  editor.session.setMode(`ace/mode/${mode}`);
+  aceInstance.session.setMode(`ace/mode/${mode}`);
 });
 
 const fontSizeSelector = document.createElement("select");
@@ -106,9 +112,8 @@ fontSizeSelector.innerHTML = `
 <option value="40px">40px</option>
 `;
 fontSizeSelector.addEventListener("change", function () {
-  const editor = ace.edit("editor");
   const newFontSize = this.value;
-  editor.setFontSize(newFontSize);
+  aceInstance.setFontSize(newFontSize);
 });
 
 const fileMenu = document.querySelector('#FileMenu');
@@ -121,13 +126,7 @@ container.appendChild(modeSelector);
 container.appendChild(fontSizeSelector);
 fileMenu.appendChild(container);
 
-
-
-
-
-
-
-// 8. heyyy new 
+// 8. CREATING FILE NAME, CLOSE BUTTONS 
 function createTextFile(data, filePath) {
   const parent = document.getElementById('OpenedFiles');
   const FileButtonsAll = document.getElementById('FileButtonsAll');
