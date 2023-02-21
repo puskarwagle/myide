@@ -29,93 +29,103 @@ document.addEventListener("click", function(event) {
   }
 });
 
-function createAceElement(parent, language = 'javascript') {
-  const editorElement = document.createElement('div');
-  editorElement.style.width = '100%';
-  editorElement.style.height = '100%';
-  parent.appendChild(editorElement);
+let themeIndex = 0;
+const themes = [
+  "ace/theme/tomorrow_night_eighties",
+  "ace/theme/tomorrow",
+  "ace/theme/monokai",
+  "ace/theme/github",
+  "ace/theme/merbivore",
+  "ace/theme/solarized_dark",
+  "ace/theme/solarized_light",
+  "ace/theme/twilight",
+  "ace/theme/clouds",
+  "ace/theme/cobalt",
+];
+let mode = 'javascript';
+let fontSize = '14px';
 
-  const aceInstance = ace.edit(editorElement);
-  aceInstance.setTheme('ace/theme/chrome');
+function createAceElement(parent) {
+  const editor = document.createElement('div');
+  editor.style.width = '100%';
+  editor.style.height = '100%';
+  parent.appendChild(editor);
 
-  // Set mode based on file extension
-  const ext = language.toLowerCase();
-  if (ext === 'js') {
-    aceInstance.session.setMode('ace/mode/javascript');
-  } else if (ext === 'html') {
-    aceInstance.session.setMode('ace/mode/html');
-  } else if (ext === 'css') {
-    aceInstance.session.setMode('ace/mode/css');
-  } else if (ext === 'xml') {
-    aceInstance.session.setMode('ace/mode/xml');
-  } else if (ext === 'md') {
-    aceInstance.session.setMode('ace/mode/markdown');
-  }
-
+  const aceInstance = ace.edit(editor);
+  aceInstance.setTheme(themes[themeIndex]);
+  aceInstance.session.setMode(`ace/mode/${mode}`);
+  aceInstance.setFontSize(fontSize);
   aceInstance.setOptions({
     autoScrollEditorIntoView: true,
   });
 
-  // Add mode selector
-  const modeButton = document.createElement('button');
-  modeButton.classList.add('modeButton');
-  modeButton.textContent = language;
-  const modes = [
-    'javascript',
-    'html',
-    'css',
-    'xml',
-    'markdown'
-  ];
-  let currentModeIndex = modes.indexOf(language.toLowerCase());
-  modeButton.addEventListener('click', () => {
-    currentModeIndex = (currentModeIndex + 1) % modes.length;
-    const currentMode = modes[currentModeIndex];
-    modeButton.textContent = currentMode;
-    aceInstance.getSession().setMode(`ace/mode/${currentMode}`);
-  });
-
-  // Add theme selector
-  const themeButton = document.createElement('button');
-  themeButton.classList.add('themeButton');
-  themeButton.textContent = 'chrome';
-  const themes = [
-    'chrome',
-    'eclipse',
-    'monokai',
-    'github',
-    'tomorrow'
-  ];
-  let currentThemeIndex = 0;
-  themeButton.addEventListener('click', () => {
-    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-    const currentTheme = themes[currentThemeIndex];
-    themeButton.textContent = currentTheme;
-    aceInstance.setTheme(`ace/theme/${currentTheme}`);
-  });
-
-  // Add font size slider
-  const fontSizeSlider = document.createElement('input');
-  fontSizeSlider.type = 'range';
-  fontSizeSlider.min = '5';
-  fontSizeSlider.max = '50';
-  fontSizeSlider.value = '16';
-  fontSizeSlider.style.transform = 'rotate(270deg)';
-  fontSizeSlider.style.width = '4vw';
-  fontSizeSlider.style.height = '4vw';
-  fontSizeSlider.addEventListener('input', () => {
-    const fontSize = fontSizeSlider.value;
-    aceInstance.setFontSize(`${fontSize}px`);
-  });
-
-  // Append to FileMenu
-  const fileMenu = document.querySelector('#FileMenu');
-  fileMenu.appendChild(fontSizeSlider);
-  fileMenu.appendChild(modeButton);
-  fileMenu.appendChild(themeButton);
-
   return aceInstance;
 }
+
+const themeSelector = document.createElement("select");
+themeSelector.innerHTML = themes
+  .map((theme) => `<option value="${theme}">${theme}</option>`)
+  .join("\n");
+themeSelector.addEventListener("change", function () {
+  themeIndex = this.selectedIndex;
+  const editor = ace.edit("editor");
+  const newTheme = themes[themeIndex];
+  editor.setTheme(newTheme);
+});
+
+const modeSelector = document.createElement("select");
+modeSelector.innerHTML = `
+<option value="javascript">JavaScript</option>
+<option value="html">HTML</option>
+<option value="css">CSS</option>
+<option value="xml">XML</option>
+<option value="markdown">Markdown</option>
+<option value="python">Python</option>
+<option value="ruby">Ruby</option>
+<option value="java">Java</option>
+<option value="c_cpp">C/C++</option>
+<option value="golang">Go</option>
+`;
+modeSelector.addEventListener("change", function () {
+  mode = this.value;
+  const editor = ace.edit("editor");
+  editor.session.setMode(`ace/mode/${mode}`);
+});
+
+const fontSizeSelector = document.createElement("select");
+fontSizeSelector.innerHTML = `
+<option value="12px">12px</option>
+<option value="14px" selected>14px</option>
+<option value="16px">16px</option>
+<option value="18px">18px</option>
+<option value="20px">20px</option>
+<option value="24px">24px</option>
+<option value="28px">28px</option>
+<option value="32px">32px</option>
+<option value="36px">36px</option>
+<option value="40px">40px</option>
+`;
+fontSizeSelector.addEventListener("change", function () {
+  const editor = ace.edit("editor");
+  const newFontSize = this.value;
+  editor.setFontSize(newFontSize);
+});
+
+const fileMenu = document.querySelector('#FileMenu');
+const container = document.createElement("div");
+container.style.display = "flex";
+container.style.flexDirection = "row";
+container.style.justifyContent = "space-between";
+container.appendChild(themeSelector);
+container.appendChild(modeSelector);
+container.appendChild(fontSizeSelector);
+fileMenu.appendChild(container);
+
+
+
+
+
+
 
 // 8. heyyy new 
 function createTextFile(data, filePath) {
@@ -142,7 +152,7 @@ function createTextFile(data, filePath) {
   fileContentsAll.appendChild(fileContent);
 
   // Add Ace editor element
-  const aceEditorElement = createAceElement(fileContent, getAceModeFromFilename(filePath));
+  const aceEditorElement = createAceElement(fileContent);
   if (data) {
     aceEditorElement.setValue(data);
     aceEditorElement.focus();
@@ -160,27 +170,6 @@ function createTextFile(data, filePath) {
   // Add file button listeners
   addFileButtonListeners(fileNameBtn, fileId);
 }
-
-function getAceModeFromFilename(filename) {
-  const extension = filename.split('.').pop();
-  switch (extension) {
-    case 'js':
-      return 'javascript';
-    case 'html':
-      return 'html';
-    case 'css':
-      return 'css';
-    case 'xml':
-      return 'xml';
-    case 'md':
-      return 'markdown';
-    default:
-      return 'text';
-  }
-}
-
-
-
 
 // 9. Close and toggle buttons on file headers
 function addFileButtonListeners(fileNameBtn, fileId) {
