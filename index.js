@@ -9,7 +9,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 // 1.🗿 Check if ./guu exists ! CREATE PROJECTS 🗂️🗂️🗂️🗂️🗂️🗂️
-const directoryPath = './guu';
+const directoryPath = './ahhbhan';
 fs.stat(directoryPath, (err, stats) => {
   if (err) {
     if (err.code === 'ENOENT') {
@@ -207,6 +207,19 @@ app.post('/server/file/read', (req, res) => {
       // console.log(data);
     }
   });
+});
+
+// 📄 WRITE FILE 📄 
+app.post('/save-file', async (req, res) => {
+  const { filePath, textdata } = req.body;
+  //console.log(filePath, textdata)
+  try {
+    await fsPromises.writeFile(filePath, textdata);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 });
 
 // 10. 🔘🔘🔘

@@ -16,7 +16,7 @@ body {
   padding: 2vw;
   border:1px solid grey;
   text-align: center;
-  font-size: 2vw;
+  font-size: 4vw;
 }
 .pages {
   border: 2px solid cornflowerblue;
@@ -34,6 +34,7 @@ body {
 }
 #tree{
   border:0px solid red;
+  font-size: 4vw;
 }
 .children {
   display:none;
@@ -121,6 +122,13 @@ ul div {
 }
 #OpenedFiles .fileNameBtn .close {
   background-color: #dc3545;
+  font-size: 4vw;
+  padding:0 1vw;
+  border: none;
+  cursor: pointer;
+}
+#OpenedFiles .fileNameBtn .save {
+  background-color: #40ffa1;
   font-size: 4vw;
   padding:0 1vw;
   border: none;

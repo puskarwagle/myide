@@ -3,3 +3,6 @@ package-lock.json
 
 # exclude node_modules
 node_modules
+
+# ignore ahhbhan
+ahhbhan
