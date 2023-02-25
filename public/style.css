@@ -42,7 +42,175 @@ body {
   border-radius: 5px;
   padding-left:4vw;
 }
+ul div {* {
+   margin: 0 0 0 0;
+   padding:0 0 0 0;
+}
+body {
+  background-color: rgba(128, 128, 128, 0.5);
+}
+#MainButtons {
+  display:flex;
+  margin-bottom:1vw;
+  border:0px solid red;
+  background-color: rgba(128, 128, 128, 0.7);
+}
+#MainButtons button {
+  flex-basis: 25%;
+  padding: 2vw;
+  border:1px solid grey;
+  text-align: center;
+  font-size: 4vw;
+}
+.pages {
+  border: 2px solid cornflowerblue;
+  padding:1vw 1vw;
+  display: flex;
+  flex-direction:column;
+  border-radius: 5px;
+  min-height:80vh;
+  display:none;
+}
+#FileManager, #LocalHost, #Terminal, #OpenedFiles {
+  border: 6px dashed cornflowerblue;
+  margin:0 2vw;
+}
+
+/* FILE EXPLORER 🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️🗄️📔🗃️🗃️🗃️🗂️ */
+#FileManager {
+  display:flex;
+  flex-direction:column;
+}
+#tree{
+  border:0px solid red;
+  font-size: 4vw;
+}
+.children {
+  display:none;
+  border-left: 0px solid green;
+  border-radius: 5px;
+  padding-left:4vw;
+}
 ul div {
+   border-radius: 5px;
+   display:flex;
+   align-items:center;
+   justify-content:flex-end;
+   border-bottom:1px dashed cornflowerblue;
+}
+.file-area {
+   border-left: 3px solid #aafff4;
+   padding:0 2vw;
+}
+.file-area span:nth-child(1) {
+   margin-right:auto;
+   cursor: pointer;
+}
+.file-area span:nth-child(2) {
+   padding:0 10vw;
+   font-size: 3vw;
+   cursor: default;
+}
+.folder-area {
+  border-left: 2px solid #f50fce;
+  padding:0 2vw;
+}
+.folder-area span:nth-child(1) {
+   margin-right:auto;
+   cursor: pointer;
+}
+.folder-area span:nth-child(2) {
+   padding:0 2vw;
+   font-size: 3vw;
+   cursor: default;
+}
+.emoji {
+  border:0px solid gold;
+  padding:2vw 2vw;
+  cursor: pointer;
+}
+.emoji:active {
+  background-color: blue;
+}
+
+ol {
+  margin:4vw 4vw;
+}
+
+
+/* 📑📑📑📑📑📑📑📑📑📑📑📑📑📑📑📇📇📇🥧🥧🥧 */
+/* CSS for the Opened Files container */
+#OpenedFiles {
+  display: flex;
+  flex-direction: column;
+  padding:2vw;
+}
+#OpenedFiles #FileButtonsAll {
+  border: 0px solid #f50fce;
+  margin-bottom: 2vw;
+  display: flex;
+  min-height:0vw;
+  overflow: auto;
+  pointer: cursor;
+}
+#OpenedFiles #FileMenu {
+  border: 0px solid #f50fce;
+  margin-bottom: 1vw;
+  display: flex;
+  min-height:4vw;
+  overflow: auto;
+}
+#OpenedFiles #FileButtonsAll .fileNameBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content:space-between;
+  border:1px solid #aafff4;
+  border-radius:5px;
+  height:100%;
+  margin-right:2vw;
+}
+#OpenedFiles .fileNameBtn .fileName {
+  font-weight: bold;
+  font-size: 4vw;
+}
+#OpenedFiles .fileNameBtn .close {
+  background-color: #dc3545;
+  font-size: 4vw;
+  padding:0 1vw;
+  border: none;
+  cursor: pointer;
+}
+#OpenedFiles .fileNameBtn .save {
+  background-color: #40ffa1;
+  font-size: 4vw;
+  padding:0 1vw;
+  border: none;
+  cursor: pointer;
+}
+#OpenedFiles #fileContentsAll {
+  border: 0px solid #f50fce;
+  min-height: 100vh;
+  height: 100vh;
+}
+
+#OpenedFiles .fileContent {
+  padding: 0vw 0vw;
+  background-color: rgba(128, 128, 128, 0.0);
+  border-bottom: 3px solid #ccc;
+  border-radius: 5px;
+  display: none;
+  overflow: auto;
+  height: 100%;
+}
+
+
+
+#LocalHost iframe {
+  min-height:100vh;
+  width:100%;
+  border:none;
+}
+
    border-radius: 5px;
    display:flex;
    align-items:center;
